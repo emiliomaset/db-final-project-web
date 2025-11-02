@@ -20,23 +20,28 @@ function Login() {
                 body: JSON.stringify(loginData)
             });
 
+
             console.log("response", response)
 
+            const result = await response.text()
 
-            if (!response.ok) {
-                throw new Error('something went wrong...')
+            if (result.includes("Invalid")) {
+                alert(result)
             }
 
-            const result = await response.text()
-            console.log("result:", result)
+            else if (result.includes("Successful")) {
+                navigate('/home', {state : {email : loginData.email}})
+            }
 
-
+            else if (!response.ok) {
+                throw new Error("Error: ")
+            }
 
         } catch (error) {
             console.log("Error:", error)
         }
 
-        navigate('/home', {state : {email : loginData.email}})
+
     }
 
     return (
