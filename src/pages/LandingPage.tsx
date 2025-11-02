@@ -1,29 +1,9 @@
+import Login from "../components/Login"
 import "./LandingPage.css"
 
 function LandingPage(){
     return(
-        <>
-                <form className="login-container">
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            placeholder="Enter email..."
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            placeholder="Enter password..."
-                            required
-                        />
-                    </div>
-
-                    <button className="login-btn">Login</button>
-                </form>
-
-        </>
+        <Login/>
 
     ) // end of return
 
