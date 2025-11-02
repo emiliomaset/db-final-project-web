@@ -1,15 +1,42 @@
 import {useState} from "react";
+import {API_BASE_URL} from "../config.ts";
+import {useNavigate} from 'react-router-dom'
 
 function Login() {
-
     const [loginData, setLoginData] = useState({email : "", password: ""})
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setLoginData({...loginData, [e.target.name] : e.target.value})
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault() // prevents page refresh
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(loginData)
+            });
 
+            console.log("response", response)
+
+
+            if (!response.ok) {
+                throw new Error('something went wrong...')
+            }
+
+            const result = await response.text()
+            console.log("result:", result)
+
+
+
+        } catch (error) {
+            console.log("Error:", error)
+        }
+
+        navigate('/home', {state : {email : loginData.email}})
     }
 
     return (
