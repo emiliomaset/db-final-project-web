@@ -1,11 +1,12 @@
 import {useLocation} from "react-router-dom";
 
-function Home(){
+function MemberHome(){
     const location = useLocation();
     const email:string = location.state.email
 
     return(
         <>
+            <p>Member</p>
             <p>{email}</p>
         </>
 
@@ -13,4 +14,4 @@ function Home(){
 
 } // end of Home
 
-export default Home
+export default MemberHome

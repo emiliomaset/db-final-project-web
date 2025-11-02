@@ -25,15 +25,21 @@ function Login() {
 
             const result = await response.text()
 
-            if (result.includes("Invalid")) {
-                alert(result)
+            if (response.status == 401) {
+                alert("Incorrect credentials!")
             }
 
-            else if (result.includes("Successful")) {
-                navigate('/home', {state : {email : loginData.email}})
+            switch (result) {
+                case "Member":
+                    navigate('/member/home', {state : {email : loginData.email}});
+                    break;
+
+                case "Admin":
+                    navigate('/admin/home', {state : {email : loginData.email}});
+                    break;
             }
 
-            else if (!response.ok) {
+            if (!response.ok) {
                 throw new Error("Error: ")
             }
 

@@ -1,8 +1,9 @@
 import './App.css'
-import {BrowserRouter, Link, Routes, Route} from "react-router-dom";
-import Home from "./pages/Home.tsx"
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import MemberHome from "./pages/MemberHome.tsx"
 import LandingPage from "./pages/LandingPage.tsx"
 import AppLayout from "./AppLayout.tsx"
+import AdminHome from "./pages/AdminHome.tsx";
 
 function App() {
     return (
@@ -12,7 +13,8 @@ function App() {
             <AppLayout>
             <Routes>
                 <Route path="/" element={<LandingPage />}></Route>
-                <Route path="/Home" element={<Home />} />
+                <Route path="/member/home" element={<MemberHome />} />
+                <Route path="/admin/home" element={<AdminHome />} />
             </Routes>
             </AppLayout>
         </BrowserRouter>
