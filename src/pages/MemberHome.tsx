@@ -4,10 +4,12 @@ function MemberHome(){
     const location = useLocation();
     const email:string = location.state.email
 
+
+
     return(
         <>
-            <p>Member</p>
-            <p>{email}</p>
+            <p>Member {email}</p>
+
         </>
 
     ) // end of return

@@ -1,0 +1,13 @@
+.admin-toolbar {
+    display: flex;
+    width: 100%;
+    background-color: #cccccc;
+    padding: 1rem;
+    height: 10vh;
+}
+
+.admin-home-content {
+    margin: auto;
+    background-color: #007bff;
+    padding: 2rem;
+}
