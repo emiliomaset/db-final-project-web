@@ -1,36 +1,28 @@
-import Select from "react-select/base";
+import Select from "react-select";
 import {useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
+
+
 function WWW() {
+    const [options, setOptions] = useState([]);
+    
+    useEffect(() => {
+        fetch(`${API_BASE_URL}/getallcontent`)
+            .then(response => response.json())
+            .then(data => {
+                const formattedOptions = data.map(content => (
+                    {value: content.contentId, label: content.title}
+                ));
+                setOptions(formattedOptions);
+            })
+    }, []); 
 
-    const [rawContent, setRawContent] = useState([])
-    const [contentArray, setContentArray] = useState([])
-    const [firstRender, setFirstRender] = useState(true)
-
-    useEffect( () => {
-       fetch(`${API_BASE_URL}/getallcontent`).then(response => response.json()).
-       then(data => {
-           setFirstRender(false)
-           setRawContent(data)
-           rawContent.forEach( (content, index) => setContentArray(...contentArray, {value: content.title, label: content.contentId}));
-       })
-        }, [firstRender]);
-
-    console.log("raw", rawContent)
-    console.log("?", contentArray)
-
-
-
-    return(
+    return (
         <>
-
-
-                <Select options={contentArray}/>
-
-
+            <Select options={options}/>
         </>
-    ) // end of return
+    );
 
 } //end of WWW
 
