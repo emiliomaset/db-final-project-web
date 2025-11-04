@@ -7,7 +7,7 @@ function WWW() {
     const [rawContent, setRawContent] = useState([])
     const [idOfContentSelected, setIdOfContentSelected] = useState("")
     const [typeOfContentSelected, setTypeOfContentSelected] = useState("")
-    
+
     useEffect(() => { // load content options
         fetch(`${API_BASE_URL}/getallcontent`)
             .then(response => response.json())
@@ -31,22 +31,37 @@ function WWW() {
             body: idOfContentSelected
         }).then(response => response.text())
             .then(contentType => {
-                // 2. Log the new value here, right after you receive it.
-                console.log("Fetched content type:", contentType);
                 setTypeOfContentSelected(contentType);
             })
             .catch(error => console.error("Error fetching content type:", error));
     }, [idOfContentSelected]);
 
 
-
-
     return (
         <>
             <Select
                 options={options}
-                onChange={(data:string) => setIdOfContentSelected(data.value)}
+                onChange={(data) => setIdOfContentSelected(data.value)}
             />
+
+            {typeOfContentSelected === "series" && (
+                <>
+                    <Select
+                        options={}
+                        onChange={}
+                    />
+
+                    <Select
+                        options={}
+                        onChange={}
+                    />
+                </>
+
+
+            )
+            }
+
+
         </>
     );
 
