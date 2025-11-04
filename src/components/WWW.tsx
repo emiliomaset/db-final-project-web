@@ -21,16 +21,23 @@ function WWW() {
     }, []);
 
     useEffect(() => {
+        if (!idOfContentSelected) { // prevents from running on first render
+            return;
+        }
+
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
             headers: {"Content-Type": "text/plain"},
             body: idOfContentSelected
         }).then(response => response.text())
-            .then(contentType => setTypeOfContentSelected(contentType))
-
-    console.log(typeOfContentSelected)
-
+            .then(contentType => {
+                // 2. Log the new value here, right after you receive it.
+                console.log("Fetched content type:", contentType);
+                setTypeOfContentSelected(contentType);
+            })
+            .catch(error => console.error("Error fetching content type:", error));
     }, [idOfContentSelected]);
+
 
 
 
