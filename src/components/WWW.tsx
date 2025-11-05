@@ -3,13 +3,29 @@ import {use, useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
 function WWW() {
-    const [options, setOptions] = useState([]);
+    const [contentOptions, setContentOptions] = useState([]);
     const [rawContent, setRawContent] = useState([])
     const [idOfContentSelected, setIdOfContentSelected] = useState("")
     const [typeOfContentSelected, setTypeOfContentSelected] = useState("")
-    const [viewCount, setViewCount] = useState(0)
+    const [numSeasonSelected, setNumSeasonSelected] = useState(0)
+    const [episodeIdOfEpisodeSelected, setEpisodeIdOfEpisodeSelected] = useState("")
+    const [viewCount, setViewCount] = useState(-1)
+    const [numSeasons, setNumSeasons] = useState(0)
+    const [listOfEpisodes, setListOfEpisodes] = useState([])
 
-    useEffect(() => { // load content options
+    console.log(numSeasonSelected)
+
+
+    function getSeasonsAsOptions(num) {
+            const seasons = []
+            for (let i = 0; i < num;i++) {
+                seasons.push({label: `Season ${i+1}` , value:`Season ${i+1}` })
+            }
+            return seasons;
+        }
+
+
+    useEffect(() => { // load content contentOptions
         fetch(`${API_BASE_URL}/getallcontent`)
             .then(response => response.json())
             .then(data => {
@@ -17,7 +33,7 @@ function WWW() {
                 const formattedOptions = data.map((content: { contentId: string; title: string; }) => (
                     {value: content.contentId, label: content.title}
                 ));
-                setOptions(formattedOptions);
+                setContentOptions(formattedOptions);
             })
     }, []);
 
@@ -59,7 +75,7 @@ function WWW() {
             return;
         }
 
-
+        setViewCount(-1)
 
         if (typeOfContentSelected === "movie") {
             fetch(`${API_BASE_URL}/getmovieviewcount`, {
@@ -72,31 +88,87 @@ function WWW() {
                 })
                 .catch(error => console.error("Error fetching content type:", error));
         }
+
+        else {
+            fetch(`${API_BASE_URL}/getnumseasons`, {
+                method: 'POST',
+                headers: {"Content-Type": "text/plain"},
+                body: idOfContentSelected
+            }).then(response => response.text())
+                .then(numOfSeasons => {
+                    setNumSeasons(parseInt(numOfSeasons));
+                })
+                .catch(error => console.error("Error fetching content type:", error));
+        }
     }, [typeOfContentSelected])
+
+    useEffect(() => {
+
+        if (!numSeasonSelected) {
+            return
+        }
+
+        else {
+            fetch(`${API_BASE_URL}/getepisodes`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({"contentId" : idOfContentSelected, "seasonNum" : numSeasonSelected})
+            }).then(response => response.json())
+                .then(episodes => {
+                    setListOfEpisodes(episodes);
+                    console.log("episodes", episodes)
+                    const formattedOptions = episodes.map((content: { episodeId: string; title: string; }) => (
+                        {value: content.episodeId, label: content.title}
+                    ));
+                    setListOfEpisodes(formattedOptions);
+
+                })
+                .catch(error => console.error("Error fetching content type:", error));
+
+        }
+
+    }, [numSeasonSelected]);
+
+    useEffect(()=> {
+        fetch(`${API_BASE_URL}/getepisodeviewcount`, {
+            method: 'POST',
+            headers: {"Content-Type": "text/plain"},
+            body: episodeIdOfEpisodeSelected
+        }).then(response => response.text())
+            .then(numViews => {
+                setViewCount(parseInt(numViews));
+            })
+            .catch(error => console.error("Error fetching content type:", error));
+
+    },[episodeIdOfEpisodeSelected]);
 
 
     return (
         <>
             <Select
-                options={options}
+                options={contentOptions}
                 onChange={(data) => setIdOfContentSelected(data.value)}
             />
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    {viewCount}
+                    View count: {viewCount}
                 </>
             )}
 
             {typeOfContentSelected === "series" && (
                 <>
                     <Select
-
+                        options={getSeasonsAsOptions(numSeasons)}
+                        onChange={(data) => setNumSeasonSelected(parseInt(data.label.slice(-1)))}
                     />
 
                     <Select
-
+                        options={listOfEpisodes}
+                        onChange={data=> setEpisodeIdOfEpisodeSelected(data.value)}
                     />
+
+                    {viewCount >= 0 && (<>View count: {viewCount}</>)}
                 </>
 
 
