@@ -1,5 +1,5 @@
 import Select from "react-select";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
 function WWW() {
@@ -7,6 +7,7 @@ function WWW() {
     const [rawContent, setRawContent] = useState([])
     const [idOfContentSelected, setIdOfContentSelected] = useState("")
     const [typeOfContentSelected, setTypeOfContentSelected] = useState("")
+    const [viewCount, setViewCount] = useState(0)
 
     useEffect(() => { // load content options
         fetch(`${API_BASE_URL}/getallcontent`)
@@ -36,6 +37,43 @@ function WWW() {
             .catch(error => console.error("Error fetching content type:", error));
     }, [idOfContentSelected]);
 
+    useEffect(() => {
+        if (!typeOfContentSelected) { // prevents from running on first render
+            return;
+        }
+
+        fetch(`${API_BASE_URL}/getmovieorseries`, {
+            method: 'POST',
+            headers: {"Content-Type": "text/plain"},
+            body: idOfContentSelected
+        }).then(response => response.text())
+            .then(contentType => {
+                setTypeOfContentSelected(contentType);
+            })
+            .catch(error => console.error("Error fetching content type:", error));
+    }, [idOfContentSelected]);
+
+    useEffect(() => {
+
+        if (!typeOfContentSelected) {
+            return;
+        }
+
+
+
+        if (typeOfContentSelected === "movie") {
+            fetch(`${API_BASE_URL}/getmovieviewcount`, {
+                method: 'POST',
+                headers: {"Content-Type": "text/plain"},
+                body: idOfContentSelected
+            }).then(response => response.text())
+                .then(numViews => {
+                    setViewCount(parseInt(numViews));
+                })
+                .catch(error => console.error("Error fetching content type:", error));
+        }
+    }, [typeOfContentSelected])
+
 
     return (
         <>
@@ -44,16 +82,20 @@ function WWW() {
                 onChange={(data) => setIdOfContentSelected(data.value)}
             />
 
+            {typeOfContentSelected === "movie" && (
+                <>
+                    {viewCount}
+                </>
+            )}
+
             {typeOfContentSelected === "series" && (
                 <>
                     <Select
-                        options={}
-                        onChange={}
+
                     />
 
                     <Select
-                        options={}
-                        onChange={}
+
                     />
                 </>
 
