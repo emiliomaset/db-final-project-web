@@ -12,6 +12,7 @@ function WWW() {
     const [viewCount, setViewCount] = useState(-1)
     const [numSeasons, setNumSeasons] = useState(0)
     const [listOfEpisodes, setListOfEpisodes] = useState([])
+    const [arrayOfViewers, setArrayOfViewers] = useState([])
 
     console.log(numSeasonSelected)
 
@@ -37,26 +38,12 @@ function WWW() {
             })
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { // gets
         if (!idOfContentSelected) { // prevents from running on first render
             return;
         }
 
-        fetch(`${API_BASE_URL}/getmovieorseries`, {
-            method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: idOfContentSelected
-        }).then(response => response.text())
-            .then(contentType => {
-                setTypeOfContentSelected(contentType);
-            })
-            .catch(error => console.error("Error fetching content type:", error));
-    }, [idOfContentSelected]);
-
-    useEffect(() => {
-        if (!typeOfContentSelected) { // prevents from running on first render
-            return;
-        }
+        setArrayOfViewers([])
 
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
@@ -142,33 +129,68 @@ function WWW() {
 
     },[episodeIdOfEpisodeSelected]);
 
+    useEffect( () => {
+        async function getViewers(id: string) {
+            const response = await fetch(`${API_BASE_URL}/getviewers/${id}/${typeOfContentSelected}`);
+            const viewersArray = await response.json();
+            console.log("viewersArray", viewersArray)
+            const arrayOfViewers = viewersArray.map(v => v.name);
+
+            setArrayOfViewers(arrayOfViewers)
+        }
+
+        if (typeOfContentSelected === "movie") {
+            getViewers(idOfContentSelected);
+        }
+
+        if (episodeIdOfEpisodeSelected != "") {
+            getViewers(episodeIdOfEpisodeSelected)
+        }
+
+    }, [episodeIdOfEpisodeSelected, idOfContentSelected, typeOfContentSelected])
 
     return (
         <>
+            <div className="form-group">
+            <label>Title of Content</label>
             <Select
                 options={contentOptions}
                 onChange={(data) => setIdOfContentSelected(data.value)}
             />
+            </div>
 
             {typeOfContentSelected === "movie" && (
                 <>
                     View count: {viewCount}
+
+
+                    Viewers: {arrayOfViewers.map(viewer => <p>{viewer}</p>)}
                 </>
             )}
 
             {typeOfContentSelected === "series" && (
                 <>
+                    <div className="form-group">
+                    <label>Select Season Number</label>
                     <Select
                         options={getSeasonsAsOptions(numSeasons)}
                         onChange={(data) => setNumSeasonSelected(parseInt(data.label.slice(-1)))}
                     />
+                    </div>
 
+                    <div className="form-group">
+                    <label>Select Episode Title</label>
                     <Select
                         options={listOfEpisodes}
                         onChange={data=> setEpisodeIdOfEpisodeSelected(data.value)}
                     />
+                    </div>
 
-                    {viewCount >= 0 && (<>View count: {viewCount}</>)}
+                    {viewCount >= 0 && (<div className="form-group">View count: {viewCount}</div>)}
+
+                    {arrayOfViewers.length > 0 && (<div className="form-group">
+                        Viewers: {arrayOfViewers.map(viewer => <p>{viewer}</p>)}
+                    </div>)}
                 </>
 
 

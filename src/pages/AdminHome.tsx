@@ -16,9 +16,9 @@ function AdminHome() {
 
         </div>
 
-        <div className="admin-home-content">
+
             {hasClickedWhosWatchedWhat && <WWW/>}
-        </div>
+
         </>
     ) // end of return
 } //end of AdminHome
