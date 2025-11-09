@@ -69,7 +69,7 @@ function Login() {
 
             <div className="form-group">
                 <input
-                    type="text"
+                    type="password"
                     name="password"
                     value={loginData.password}
                     placeholder="Enter password..."
