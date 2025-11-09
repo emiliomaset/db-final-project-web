@@ -145,11 +145,17 @@ function WWW() {
     }, [episodeIdOfEpisodeSelected, idOfContentSelected, typeOfContentSelected])
 
     useEffect(() => {
+        setNumSeasonSelected(0)
+        setEpisodeIdOfEpisodeSelected("");
         setViewCount(-1)
         setArrayOfViewers([])
-        setNumSeasonSelected(0)
-
     }, [idOfContentSelected]);
+
+    useEffect(() => {
+        setEpisodeIdOfEpisodeSelected("");
+        setViewCount(-1);
+        setArrayOfViewers([]);
+    }, [numSeasonSelected]);
 
     return (
         <div className="admin-home-content">
@@ -182,29 +188,37 @@ function WWW() {
                             options={getSeasonsAsOptions(numSeasons)}
                             isClearable
                             onChange={(data) => {
-                                // 1. Set the new season number from the option's value
-                                setNumSeasonSelected(data ? parseInt(data.value, 10) : 0);
-
-                                // 2. Reset all state related to the episode selection
-                                setEpisodeIdOfEpisodeSelected("");
-                                setViewCount(-1);
-                                setArrayOfViewers([]);
-                            }
-                        }
+                                setNumSeasonSelected(data ? parseInt(data.value) : 0);
+                            }}
                         />
                     </div>
 
-                    {numSeasonSelected != 0 && <div className="form-group">
-                        <label>Select Episode Title</label>
-                        <Select
-                            options={listOfEpisodes}
-                            onChange={data=> setEpisodeIdOfEpisodeSelected(data.value)}
-                        />
-                        {viewCount >= 0 && (<p>View count: {viewCount}</p>)}
+                    {numSeasonSelected !== 0 && (
+                        <div className="form-group">
+                            <label>Select Episode Title</label>
+                            <Select
+                                options={listOfEpisodes}
+                                value={
+                                    episodeIdOfEpisodeSelected
+                                        ? listOfEpisodes.find(
+                                            (episode) => episode.value === episodeIdOfEpisodeSelected
+                                        )
+                                        : null
+                                }
+                                onChange={(data) =>
+                                    setEpisodeIdOfEpisodeSelected(data ? data.value : "")
+                                }
+                            />
+                            {viewCount >= 0 && <p>View count: {viewCount}</p>}
 
-                        {arrayOfViewers.length > 0 && ( <>Viewers: {arrayOfViewers.map(viewer => <p>{viewer}</p>)}
-                        </>)}
-                    </div>}
+                            {arrayOfViewers.length > 0 && (
+                                <>
+                                    Viewers: {arrayOfViewers.map((viewer) => <p key={viewer}>{viewer}</p>)}
+                                </>
+                            )}
+                        </div>
+                    )}
+
 
 
 
