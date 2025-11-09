@@ -31,7 +31,10 @@ function Login() {
 
             switch (result) {
                 case "Member":
-                    navigate('/member/home', {state : {email : loginData.email}});
+                    // Save email to localStorage
+                    localStorage.setItem("email", loginData.email);
+
+                    navigate('/member/home');
                     break;
 
                 case "Admin":
