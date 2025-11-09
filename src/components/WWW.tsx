@@ -15,8 +15,8 @@ function WWW() {
 
     function getSeasonsAsOptions(numOfSeasonsForSeries: number) { // makes array of options for select season field
         const seasons = []
-        for (let i = 0; i < numOfSeasonsForSeries;i++) {
-            seasons.push({label: `Season ${i+1}` , value:`Season ${i+1}` })
+        for (let i = 1; i <= numOfSeasonsForSeries; i++) {
+            seasons.push({label: `Season ${i}`, value: i.toString()})
         }
         return seasons;
     }
@@ -180,8 +180,15 @@ function WWW() {
                         <label>Select Season Number</label>
                         <Select
                             options={getSeasonsAsOptions(numSeasons)}
+                            isClearable
                             onChange={(data) => {
-                                setNumSeasonSelected(parseInt(data.label.slice(-1)))
+                                // 1. Set the new season number from the option's value
+                                setNumSeasonSelected(data ? parseInt(data.value, 10) : 0);
+
+                                // 2. Reset all state related to the episode selection
+                                setEpisodeIdOfEpisodeSelected("");
+                                setViewCount(-1);
+                                setArrayOfViewers([]);
                             }
                         }
                         />
