@@ -64,16 +64,6 @@ function MemberHome(){
         if (email) fetchData();
     }, [email]);
 
-    //Fetch watch history
-    useEffect(() => {
-        if (!memberId) return;
-
-        fetch(`${API_BASE_URL}/api/movies/history/${memberId}`)
-            .then((res) => res.json())
-            .then((data) => setHistory(data))
-            .catch((err) => console.error("Error fetching watch history:", err));
-    }, [memberId]);
-
     //Create and load all movies dropdown
     useEffect(() => {
         fetch(`${API_BASE_URL}/getallcontent`)
@@ -120,6 +110,17 @@ function MemberHome(){
             .catch(err => console.error("Error fetching sequels: ", err));
     }, [selectedMovie]);
 
+    //Fetch watch history
+    useEffect(() => {
+        if (memberId) {
+            fetch(`${API_BASE_URL}/api/movies/all-history/${memberId}`)
+                .then(res => res.json())
+                .then(data => setHistory(data))
+                .catch(err => console.error("Error fetching watch history:", err));
+        }
+    }, [memberId]);
+
+
     if (loading) return <p style={{ color: "white" }}>Collecting your data...</p>;
 
 
@@ -138,7 +139,7 @@ function MemberHome(){
             <h2
                 style={{
                     textAlign: "center",
-                    fontSize: "30px",
+                    fontSize: "28px",
                     marginBottom: "10px",
                     color: "white",
                     letterSpacing: "0.25px",
@@ -147,12 +148,12 @@ function MemberHome(){
             </h2>
 
             {/* Movie Selection Bar */}
-            <div style={{ maxWidth: "420px", margin: "30px auto", textAlign: "center" }}>
-                <h3 style={{ marginBottom: "10px", color: "#dddddd" }}>🎥 Browse All Movies</h3>
+            <div style={{ maxWidth: "360px", margin: "30px auto", textAlign: "center" }}>
+                <h3 style={{ marginBottom: "10px", color: "#dddddd" }}>🎥 Browse All Content</h3>
                 <Select
                     options={movies}
                     onChange={(data) => setSelectedMovie(data)}
-                    placeholder="Choose a movie..."
+                    placeholder="Choose a movie or a series..."
                     styles={{
                         control: (base) => ({
                             ...base,
@@ -227,7 +228,7 @@ function MemberHome(){
             {/* Sequel Area */}
             {movieInfo?.sequelList && (
                 <div style={{ marginTop: "25px", textAlign: "center" }}>
-                    <h3 style={{ color: "#dddddd" }}>🎬 Sequel(s)</h3>
+                    <h3 style={{ color: "#dddddd" }}>🎬 Sequel</h3>
                     {movieInfo.sequelList.length > 0 ? (
                         <ul style={{ listStyleType: "none", padding: 0 }}>
                             {movieInfo.sequelList.map((title: string, index: number) => (
@@ -247,7 +248,7 @@ function MemberHome(){
                             ))}
                         </ul>
                     ) : (
-                        <p style={{ color: "#888" }}>No sequel for this movie</p>
+                        <p style={{ color: "#888" }}>No sequel for this content</p>
                     )}
                 </div>
             )}
@@ -259,8 +260,7 @@ function MemberHome(){
                     padding: "20px",
                     borderRadius: "12px",
                     maxWidth: "520px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
+                    margin: "auto",
                     background: "#141414",
                     border: "1px solid #222",
                 }}
@@ -268,7 +268,7 @@ function MemberHome(){
                 <h3
                     style={{
                         textAlign: "center",
-                        color: "#dddddd",
+                        color: "#ddd",
                         marginBottom: "20px",
                         fontWeight: "500",
                     }}
@@ -276,30 +276,75 @@ function MemberHome(){
                     📺 Your Watch History
                 </h3>
 
-                {history.length > 0 ? (
-                    history.map((h: any, i: number) => (
-                        <div
-                            key={i}
+                {history && history.length > 0 ? (
+                    <>
+                        {/* Movie History */}
+                        <h4
                             style={{
-                                marginBottom: "12px",
-                                padding: "10px",
-                                backgroundColor: "#1a1a1a",
-                                borderRadius: "8px",
-                                border: "1px solid #222",
-                                transition: "0.3s",
+                                color: "#00bfff",
+                                borderBottom: "1px solid #333",
+                                paddingBottom: "4px",
                             }}
                         >
-                            <p style={{ margin: 0, color: "#f5f5f5" }}>
-                                Watched <strong>{h.watched_movie}</strong> on{" "}
-                                {new Date(h.watch_time).toLocaleString(undefined, {
-                                    dateStyle: "medium",
-                                    timeStyle: "short",
-                                })}
-                            </p>
-                        </div>
-                    ))
+                            Movie History
+                        </h4>
+                        {history
+                            .filter((h: any) => h.type === "Movie")
+                            .map((h: any, i: number) => {
+                                const dt = new Date(h.watch_time.replace(" ", "T"));
+                                return (
+                                    <p
+                                        key={i}
+                                        style={{
+                                            color: "#f5f5f5",
+                                            background: "#1a1a1a",
+                                            padding: "10px",
+                                            borderRadius: "8px",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        Watched <b>{h.title}</b> at {dt.toLocaleTimeString()} on{" "}
+                                        {dt.toLocaleDateString()}
+                                    </p>
+                                );
+                            })}
+
+                        {/* Series History */}
+                        <h4
+                            style={{
+                                color: "#7fff00",
+                                borderBottom: "1px solid #333",
+                                paddingBottom: "4px",
+                                marginTop: "20px",
+                            }}
+                        >
+                            Series History
+                        </h4>
+                        {history
+                            .filter((h: any) => h.type === "Episode")
+                            .map((h: any, i: number) => {
+                                const dt = new Date(h.watch_time.replace(" ", "T"));
+                                return (
+                                    <p
+                                        key={i}
+                                        style={{
+                                            color: "#f5f5f5",
+                                            background: "#1a1a1a",
+                                            padding: "10px",
+                                            borderRadius: "8px",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        Watched <b>{h.title}</b> — <i>{h.episode_title}</i> at{" "}
+                                        {dt.toLocaleTimeString()} on {dt.toLocaleDateString()}
+                                    </p>
+                                );
+                            })}
+                    </>
                 ) : (
-                    <p style={{ textAlign: "center", color: "#777" }}>No watch history found.</p>
+                    <p style={{ textAlign: "center", color: "#777" }}>
+                        No watch history found.
+                    </p>
                 )}
             </div>
         </div>
