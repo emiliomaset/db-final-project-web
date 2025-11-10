@@ -131,7 +131,7 @@ function MemberHome(){
             style={{
                 padding: "30px",
                 color: "white",
-                backgroundColor: "#0a0a0a",
+                backgroundColor: "cadetblue",
                 minHeight: "100vh",
                 fontFamily: "Inter, sans-serif",
         }}>
@@ -194,7 +194,7 @@ function MemberHome(){
                         boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
                     }}
                 >
-                    <h3 style={{ color: "#ffffff", marginBottom: "10px" }}>{movieInfo.title}</h3>
+                    <h3 style={{ color: "#ffffff", marginBottom: "10px", marginTop:"0rem" }}>{movieInfo.title}</h3>
                     <p style={{ color: "#cccccc" }}>
                         <strong>Genre:</strong> {movieInfo.genre || "N/A"}
                     </p>
@@ -248,7 +248,7 @@ function MemberHome(){
                             ))}
                         </ul>
                     ) : (
-                        <p style={{ color: "#888" }}>No sequel for this content</p>
+                        <p style={{ color: "white" }}>No sequel for this content</p>
                     )}
                 </div>
             )}

@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage.tsx"
 import AppLayout from "./AppLayout.tsx"
 import AdminHome from "./pages/AdminHome.tsx";
 import WWW from "./components/WWW.tsx";
-import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminAnalytics from "./components/AdminAnalytics.tsx";
 
 
 function App() {
@@ -19,8 +19,7 @@ function App() {
                 <Route path="/member/home" element={<MemberHome />} />
                 <Route path="/admin/home" element={<AdminHome />} />
                 <Route path="/www" element={<WWW />} />
-                <Route path="/admin/analytics" element={<AdminAnalytics />} />
-
+                <Route path="/analytics" element={<AdminAnalytics/>} />
             </Routes>
             </AppLayout>
         </BrowserRouter>

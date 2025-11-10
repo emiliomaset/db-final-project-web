@@ -1,5 +1,5 @@
 import Select from "react-select";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
 function WWW() {
@@ -144,14 +144,14 @@ function WWW() {
 
     }, [episodeIdOfEpisodeSelected, idOfContentSelected, typeOfContentSelected])
 
-    useEffect(() => {
+    useEffect(() => { // when idOfContentSelected changes, reset all states that rely on it
         setNumSeasonSelected(0)
         setEpisodeIdOfEpisodeSelected("");
         setViewCount(-1)
         setArrayOfViewers([])
     }, [idOfContentSelected]);
 
-    useEffect(() => {
+    useEffect(() => { // when numSeasonSelected changes, reset all states that rely on it
         setEpisodeIdOfEpisodeSelected("");
         setViewCount(-1);
         setArrayOfViewers([]);
@@ -163,11 +163,7 @@ function WWW() {
                 <label>Title of Content</label>
                 <Select
                     options={contentOptions}
-                    onChange={(data) => {
-                        setIdOfContentSelected(data.value)
-                        setEpisodeIdOfEpisodeSelected((""))
-                        setTypeOfContentSelected("")
-                    }
+                    onChange={(data) => setIdOfContentSelected(data.value)
                     }
                 />
             </div>
@@ -186,29 +182,30 @@ function WWW() {
                         <label>Select Season Number</label>
                         <Select
                             options={getSeasonsAsOptions(numSeasons)}
+                            onChange={(data) => setNumSeasonSelected(data ? parseInt(data.value) : 0)}
                             isClearable
-                            onChange={(data) => {
-                                setNumSeasonSelected(data ? parseInt(data.value) : 0);
-                            }}
                         />
                     </div>
 
                     {numSeasonSelected !== 0 && (
+                        <>
                         <div className="form-group">
                             <label>Select Episode Title</label>
                             <Select
                                 options={listOfEpisodes}
-                                value={
-                                    episodeIdOfEpisodeSelected
-                                        ? listOfEpisodes.find(
-                                            (episode) => episode.value === episodeIdOfEpisodeSelected
-                                        )
-                                        : null
+                                value={episodeIdOfEpisodeSelected ? // make the value displayed in this field either the title of the
+                                                                    // episode that has id matching episodeIdOfEpisodeSelected, or if
+                                                                    // episodeIdOfEpisodeSelected is "", make it null so nothing is displayed
+                                    listOfEpisodes.find((episode) => episode.value === episodeIdOfEpisodeSelected)
+                                    : null
                                 }
                                 onChange={(data) =>
-                                    setEpisodeIdOfEpisodeSelected(data ? data.value : "")
+                                    setEpisodeIdOfEpisodeSelected(data.value)
                                 }
                             />
+                        </div>
+
+
                             {viewCount >= 0 && <p>View count: {viewCount}</p>}
 
                             {arrayOfViewers.length > 0 && (
@@ -216,18 +213,12 @@ function WWW() {
                                     Viewers: {arrayOfViewers.map((viewer) => <p key={viewer}>{viewer}</p>)}
                                 </>
                             )}
-                        </div>
-                    )}
 
-
-
-
+                        </>)
+                    }
                 </>
-
-
-            )
+            ) // end of precedent stuff in series stuff
             }
-
         </div> // end of div classname="admin-home-content"
     ); // end of return
 
