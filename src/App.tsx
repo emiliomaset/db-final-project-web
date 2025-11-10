@@ -4,7 +4,7 @@ import MemberHome from "./pages/MemberHome.tsx"
 import LandingPage from "./pages/LandingPage.tsx"
 import AppLayout from "./AppLayout.tsx"
 import AdminHome from "./pages/AdminHome.tsx";
-
+import AdminAnalytics from "./pages/AdminAnalytics.tsx";
 function App() {
     return (
         <>
