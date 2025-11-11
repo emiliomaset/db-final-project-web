@@ -36,8 +36,7 @@ function WWW() {
         if (!idOfContentSelected) { // prevents from running on first render since idOfContentSelected is empty string
             return;
         }
-
-        setArrayOfViewers([])
+        // setArrayOfViewers([])
 
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
@@ -51,13 +50,11 @@ function WWW() {
     }, [idOfContentSelected]);
 
     useEffect(() => { // once user selects content, either get view count for it if it is a movie, or get num of seasons if its a series
-
         if (!typeOfContentSelected) {
             return;
         }
-
-        setViewCount(-1)
-        setArrayOfViewers([])
+        // setViewCount(-1)
+        // setArrayOfViewers([])
 
         if (typeOfContentSelected === "movie") {
             fetch(`${API_BASE_URL}/getmovieviewcount`, {
@@ -189,22 +186,21 @@ function WWW() {
 
                     {numSeasonSelected !== 0 && (
                         <>
-                        <div className="form-group">
-                            <label>Select Episode Title</label>
-                            <Select
-                                options={listOfEpisodes}
-                                value={episodeIdOfEpisodeSelected ? // make the value displayed in this field either the title of the
-                                                                    // episode that has id matching episodeIdOfEpisodeSelected, or if
-                                                                    // episodeIdOfEpisodeSelected is "", make it null so nothing is displayed
-                                    listOfEpisodes.find((episode) => episode.value === episodeIdOfEpisodeSelected)
-                                    : null
-                                }
-                                onChange={(data) =>
-                                    setEpisodeIdOfEpisodeSelected(data.value)
-                                }
-                            />
-                        </div>
-
+                            <div className="form-group">
+                                <label>Select Episode Title</label>
+                                <Select
+                                    options={listOfEpisodes}
+                                    value={episodeIdOfEpisodeSelected ? // make the value displayed in this field either the title of the
+                                        // episode that has id matching episodeIdOfEpisodeSelected, or if
+                                        // episodeIdOfEpisodeSelected is "", make it null so nothing is displayed
+                                        listOfEpisodes.find((episode) => episode.value === episodeIdOfEpisodeSelected)
+                                        : null
+                                    }
+                                    onChange={(data) =>
+                                        setEpisodeIdOfEpisodeSelected(data.value)
+                                    }
+                                />
+                            </div>
 
                             {viewCount >= 0 && <p>View count: {viewCount}</p>}
 
@@ -213,7 +209,6 @@ function WWW() {
                                     Viewers: {arrayOfViewers.map((viewer) => <p key={viewer}>{viewer}</p>)}
                                 </>
                             )}
-
                         </>)
                     }
                 </>

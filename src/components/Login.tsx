@@ -78,7 +78,7 @@ function Login() {
                 />
             </div>
 
-            <button className="login-btn" onClick={handleSubmit}>Login</button>
+            <button className="btn login-btn" onClick={handleSubmit}>Login</button>
         </form>
 </>
     ) // end of return
