@@ -1,6 +1,6 @@
 .admin-toolbar {
     display: flex;
-    background-color: #cccccc;
+    background-color: #f5f7f6;
     height: 10vh;
     padding: 1rem;
     justify-content: space-between;
@@ -8,8 +8,8 @@
 
 .admin-home-content {
     margin: auto;
-    background-color: #cccccc;
-    border-radius: 4px;
+    background-color: #f5f7f6;
+    border-radius: 8px;
     padding: 2rem;
     width: 80%;
     display: flex;
@@ -18,11 +18,3 @@
     padding: 1rem;
 }
 
-.toolbar-btn {
-    border-radius: 12px;
-    background-color: #007bff;
-    font-size: 1rem;
-    min-width: min-content;
-    width: 15vw;
-
-}

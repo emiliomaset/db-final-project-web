@@ -15,7 +15,7 @@ function AdminHome() {
     return(
         <>
         <div className="admin-toolbar">
-            <button className="toolbar-btn" onClick={(e) => {
+            <button className="btn blue-btn" onClick={() => {
                 setHasClickedAnOption(true)
                 setHasClickedWhosWatchedWhat(true)
                 setHasClickedAnalytics(false)
@@ -25,7 +25,7 @@ function AdminHome() {
 
             <h1>Welcome, {email}!</h1>
 
-            <button className="toolbar-btn" onClick={(e) => {
+            <button className="btn blue-btn" onClick={() => {
                 setHasClickedAnOption(true)
                 setHasClickedAnalytics(true)
                 setHasClickedWhosWatchedWhat(false)
