@@ -25,9 +25,10 @@ function BrowsePage(){
     console.log("Search term:", searchTerm);
     console.log("Option 1:", awardWinning);
     console.log("Option 2:", notWatched);
-    fetch(`${API_BASE_URL}/search${searchTerm}${awardWinning}${notWatched}`)
+    fetch(`${API_BASE_URL}/search/${searchTerm}/${awardWinning}/${notWatched}`)
     .then((res) => res.json())
             .then((data) => {
+                console.log(data)
                 const formatted = data.map((movie) => ({
                     value: movie.contentId,
                     label: movie.title,
