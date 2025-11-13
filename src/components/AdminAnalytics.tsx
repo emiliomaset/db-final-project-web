@@ -21,9 +21,6 @@ function AdminAnalytics() {
   return (
     <div style={{ padding: "40px" }}>
       <h2>📊 Streaming Analytics Dashboard</h2>
-      <p style={{ color: "gray" }}>
-        Monitor content performance in real time.
-      </p>
 
       {/* ---- Trend Section ---- */}
       <section style={{ marginTop: "30px" }}>

@@ -179,9 +179,7 @@ function MemberHome(){
                     }}
                     onClick={() => navigate("/")}
                 >
-
-
-                    Log-out
+                    Logout
                 </button>
             </div>
 
@@ -199,7 +197,7 @@ function MemberHome(){
 
             {/* Movie Selection Bar */}
             <div style={{ maxWidth: "360px", margin: "30px auto", textAlign: "center" }}>
-                <h3 style={{ marginBottom: "10px", color: "#dddddd" }}>🎥 Browse All Content</h3>
+                <h3 style={{ marginBottom: "10px", color: "#ffffff" }}>🎥 Browse All Content</h3>
                 <Select
                     options={movies}
                     onChange={(data) => setSelectedMovie(data)}
@@ -245,7 +243,7 @@ function MemberHome(){
                     }}
                 >
                     <h3 style={{ color: "#ffffff", marginBottom: "10px", marginTop:"0rem" }}>{movieInfo.title}</h3>
-                    <p style={{ color: "#cccccc" }}>
+                    <p style={{ color: "#ffffff" }}>
                         <strong>Genre:</strong> {movieInfo.genre || "N/A"}
                     </p>
                     <p>
@@ -278,9 +276,9 @@ function MemberHome(){
             {/* Sequel Area */}
             {movieInfo?.sequelList && (
                 <div style={{ marginTop: "25px", textAlign: "center" }}>
-                    <h3 style={{ color: "#dddddd" }}>🎬 Sequel</h3>
+                    <h3 style={{ color: "#ffffff" }}>🎬 Sequel (s)</h3>
                     {movieInfo.sequelList.length > 0 ? (
-                        <ul style={{ listStyleType: "none", padding: 0 }}>
+                        <ul style={{ listStyleType: "none", padding: 0, width: "30%", marginLeft: "auto", marginRight: "auto", marginBottom: "2rem" }}>
                             {movieInfo.sequelList.map((title: string, index: number) => (
                                 <li
                                     key={index}
@@ -291,6 +289,7 @@ function MemberHome(){
                                         borderRadius: "6px",
                                         padding: "8px",
                                         transition: "0.3s",
+                                        fontSize: "1.1rem"
                                     }}
                                 >
                                     {title}
@@ -318,7 +317,7 @@ function MemberHome(){
                 <h3
                     style={{
                         textAlign: "center",
-                        color: "#ddd",
+                        color: "#ffffff",
                         marginBottom: "20px",
                         fontWeight: "500",
                     }}
