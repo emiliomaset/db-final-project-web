@@ -6,6 +6,7 @@ import AppLayout from "./AppLayout.tsx"
 import AdminHome from "./pages/AdminHome.tsx";
 import WWW from "./components/WWW.tsx";
 import AdminAnalytics from "./components/AdminAnalytics.tsx";
+import BrowsePage from './pages/BrowsePage.tsx';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/admin/home" element={<AdminHome />} />
                 <Route path="/www" element={<WWW />} />
                 <Route path="/analytics" element={<AdminAnalytics/>} />
+                <Route path="/browse" element={<BrowsePage/>} />
             </Routes>
             </AppLayout>
         </BrowserRouter>

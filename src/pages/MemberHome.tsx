@@ -135,6 +135,35 @@ function MemberHome(){
                 minHeight: "100vh",
                 fontFamily: "Inter, sans-serif",
         }}>
+            {/* Search Button */}
+            <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "5vh",
+      }}
+    >
+      <button
+        className="search-btn"
+        style={{
+          textAlign: "center",
+          borderRadius: "12px",
+          backgroundColor: "#1a1a1a",
+          fontSize: "1rem",
+          minWidth: "min-content",
+          width: "15vw",
+          color: "white",
+          border: "none",
+          padding: "0.5rem 1rem",
+          cursor: "pointer",
+        }}
+        onClick={() => navigate("/browse")}
+      >
+        Search
+      </button>
+    </div>
+
             {/* Header */}
             <h2
                 style={{
