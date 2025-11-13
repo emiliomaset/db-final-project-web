@@ -7,11 +7,11 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { name: string; value: string; }; }) => {
         setLoginData({...loginData, [e.target.name] : e.target.value})
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         try {
             e.preventDefault() // prevents page refresh
             const response = await fetch(`${API_BASE_URL}/api/login`, {
@@ -78,7 +78,7 @@ function Login() {
                 />
             </div>
 
-            <button className="btn login-btn" onClick={handleSubmit}>Login</button>
+            <button className="btn blue-btn" onClick={handleSubmit}>Login</button>
         </form>
 </>
     ) // end of return
