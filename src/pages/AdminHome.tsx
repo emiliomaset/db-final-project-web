@@ -1,10 +1,11 @@
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import "./AdminHome.css"
 import WWW from "../components/WWW.tsx";
 import AdminAnalytics from "../components/AdminAnalytics.tsx";
 
 function AdminHome() {
+    const navigate = useNavigate();
     const location = useLocation();
     const email:string = location.state.email
 
@@ -23,8 +24,6 @@ function AdminHome() {
             }
             }> Who's Watched What?</button>
 
-            <h1>Welcome, {email}!</h1>
-
             <button className="btn blue-btn" onClick={() => {
                 setHasClickedAnOption(true)
                 setHasClickedAnalytics(true)
@@ -32,11 +31,15 @@ function AdminHome() {
             }
             }>Analytics</button>
 
+            <button className="btn blue-btn" onClick={() => navigate("/")}>
+                Logout
+            </button>
+
         </div>
 
             {!hasClickedAnOption && (
                 <div className="admin-home-content">
-                    <h1>Welcome to the admin interface!</h1>
+                    <h1>Welcome, {email}, to the admin interface!</h1>
                     <h2>Please select an option above!</h2>
 
                 </div>
