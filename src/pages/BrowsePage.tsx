@@ -25,7 +25,7 @@ function BrowsePage(){
     console.log("Search term:", searchTerm);
     console.log("Option 1:", awardWinning);
     console.log("Option 2:", notWatched);
-    fetch(`${API_BASE_URL}/search/${searchTerm}/${awardWinning}/${notWatched}`)
+    fetch(`${API_BASE_URL}/search?query=${searchTerm}&award=${awardWinning}&watched=${notWatched}&userID=${memberId}`)
     .then((res) => res.json())
             .then((data) => {
                 console.log(data)
@@ -33,8 +33,8 @@ function BrowsePage(){
                     value: movie.contentId,
                     label: movie.title,
                     genre: movie.genre,
-                    release_date: movie.releaseDate,
-                    imdb_link: movie.imdbLink,
+                    release_date: movie.release_date,
+                    imdb_link: movie.imdb_link,
                 }));
                 setMovies(formatted);
             })
@@ -127,6 +127,7 @@ function BrowsePage(){
 
           {/* Search Button */}
           <button
+            onClick={handleSearch}
             type="submit"
             style={{
               backgroundColor: "#007bff",
@@ -154,7 +155,47 @@ function BrowsePage(){
         }}
       >
         {/* Display Search Results */}
-        
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gap: "1.5rem",
+            width: "100%",
+            maxWidth: "1200px",
+          }}
+        >
+          {movies.length === 0 ? (
+            <p style={{ color: "white", fontSize: "1.2rem" }}>No results yet. Try a search!</p>
+          ) : (
+            movies.map((movie) => (
+              <div
+                key={movie.value}
+                style={{
+                  backgroundColor: "#0d4d5e",
+                  padding: "1rem",
+                  borderRadius: "10px",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                }}
+              >
+                <h3 style={{ marginBottom: "0.5rem" }}>{movie.label}</h3>
+                <p style={{ margin: "0.25rem 0" }}>
+                  <strong>Genre:</strong> {movie.genre}
+                </p>
+                <p style={{ margin: "0.25rem 0" }}>
+                  <strong>Release Date:</strong> {movie.release_date}
+                </p>
+                <a
+                  href={movie.imdb_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#ffd700" }}
+                >
+                  View on IMDB
+                </a>
+              </div>
+            ))
+          )}
+        </div>
       </main>
     </div>
   );
