@@ -32,7 +32,7 @@ function WWW() {
             })
     }, []);
 
-    useEffect(() => { // gets type ("movie" or "series) of content selected
+    useEffect(() => { // gets type ("movie" or "series") of content selected
         if (!idOfContentSelected) { // prevents from running on first render since idOfContentSelected is empty string
             return;
         }
@@ -126,7 +126,7 @@ function WWW() {
             const response = await fetch(`${API_BASE_URL}/getviewers/${id}/${typeOfContentSelected}`);
             const viewersArray = await response.json();
             console.log("viewersArray", viewersArray)
-            const arrayOfViewers = viewersArray.map(userObject => userObject.name);
+            const arrayOfViewers = viewersArray.map( (viewer: { name: string; timesViewed: string; lastView: string; }) => ({name: viewer.name, numTimesViewed: viewer.timesViewed, lastViewed: viewer.lastView.toString()}) );
 
             setArrayOfViewers(arrayOfViewers)
         }
@@ -167,9 +167,30 @@ function WWW() {
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    <p>View count: {viewCount}</p>
+                    <p>Total View count: {viewCount}</p>
 
-                    <p>Viewers: {arrayOfViewers.map(viewer => <p>{viewer}</p>)}</p>
+                    {viewCount > 0 && (<table
+                        cellPadding="8"
+                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}
+                    >
+                        <thead style={{ background: "#f0f0f0" }}>
+                        <tr>
+                            <th>Viewer</th>
+                            <th>Number of Times Viewed</th>
+                            <th>Last Viewed</th>
+                        </tr>
+                        </thead>
+                        <tbody style={{ background: "#f0f0f0" }}>
+                        {arrayOfViewers.map((viewer: any, i) => (
+                            <tr key={i}>
+                                <td>{viewer.name}</td>
+                                <td>{viewer.numTimesViewed}</td>
+                                <td>{viewer.lastViewed}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>)}
+
                 </>
             )}
 
@@ -202,11 +223,31 @@ function WWW() {
                                 />
                             </div>
 
-                            {viewCount >= 0 && <p>View count: {viewCount}</p>}
+                            {viewCount >= 0 && <p>Total View count: {viewCount}</p>}
 
                             {arrayOfViewers.length > 0 && (
                                 <>
-                                    Viewers: {arrayOfViewers.map((viewer) => <p key={viewer}>{viewer}</p>)}
+                                    {viewCount > 0 && (<table
+                                        cellPadding="8"
+                                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}
+                                    >
+                                        <thead style={{ background: "#f0f0f0" }}>
+                                        <tr>
+                                            <th>Viewer</th>
+                                            <th>Number of Times Viewed</th>
+                                            <th>Last Viewed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style={{ background: "#f0f0f0" }}>
+                                        {arrayOfViewers.map((viewer: any, i) => (
+                                            <tr key={i}>
+                                                <td>{viewer.name}</td>
+                                                <td>{viewer.numTimesViewed}</td>
+                                                <td>{viewer.lastViewed}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>)}
                                 </>
                             )}
                         </>)
