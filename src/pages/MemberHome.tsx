@@ -121,8 +121,91 @@ function MemberHome(){
     }, [memberId]);
 
 
-    if (loading) return <p style={{ color: "white" }}>Collecting your data...</p>;
+    if (loading) return <p style={{ color: "white" }}>Loading...</p>;
 
+    function WatchHistoryTable({ title, rows, color }) {
+        const [open, setOpen] = useState(false);
+
+        return (
+            <div style={{ marginBottom: "25px" }}>
+                {/* Header */}
+                <div
+                    onClick={() => setOpen(!open)}
+                    style={{
+                        cursor: "pointer",
+                        padding: "12px 16px",
+                        background: "#1a1a1a",
+                        borderRadius: "10px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        border: `1px solid ${color}`,
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+                    }}
+                >
+                    <h3 style={{ margin: 0, color }}>{title}</h3>
+                    <span style={{ fontSize: "20px", color }}>{open ? "▼" : "►"}</span>
+                </div>
+
+                {/* Watch History Content */}
+                <div
+                    style={{
+                        maxHeight: open ? "500px" : "0px",
+                        overflow: "hidden",
+                        transition: "max-height 0.35s ease",
+                        background: "#141414",
+                        borderRadius: "10px",
+                        border: "1px solid #222",
+                    }}
+                >
+                    <table style={{ width: "100%", borderCollapse: "collapse", color: "#fff" }}>
+                        <thead>
+                        <tr style={{ borderBottom: "1px solid #333", color: "#ccc" }}>
+                            <th style={{ padding: "10px", textAlign: "left" }}>Title</th>
+
+                            {title.includes("Series") && (
+                                <th style={{ padding: "10px", textAlign: "center" }}>Episode</th>
+                            )}
+
+                            <th style={{ padding: "10px", textAlign: "center" }}>Date</th>
+                            <th style={{ padding: "10px", textAlign: "center" }}>Time</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {rows.map((item, idx) => {
+                            const dt = new Date(item.watch_time.replace(" ", "T"));
+
+                            return (
+                                <tr key={idx} style={{ borderBottom: "1px solid #222" }}>
+                                    {/* Title stays left aligned (looks neater) */}
+                                    <td style={{ padding: "12px", fontWeight: "600", textAlign:"left" }}>
+                                        {item.title}
+                                    </td>
+
+                                    {/* Episode only for Series */}
+                                    {title.includes("Series") && (
+                                        <td style={{ padding: "12px", textAlign: "center" }}>
+                                            {item.episode_title || "—"}
+                                        </td>
+                                    )}
+
+                                    <td style={{ padding: "12px", textAlign: "center" }}>
+                                        {dt.toLocaleDateString()}
+                                    </td>
+
+                                    <td style={{ padding: "12px", textAlign: "center" }}>
+                                        {dt.toLocaleTimeString()}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
 
 
 
@@ -302,102 +385,60 @@ function MemberHome(){
                 </div>
             )}
 
-            {/* Watch History Card */}
+            {/* Watch History Section */}
             <div
                 style={{
-                    marginTop: "50px",
-                    padding: "20px",
-                    borderRadius: "12px",
-                    maxWidth: "520px",
-                    margin: "auto",
-                    background: "#141414",
-                    border: "1px solid #222",
+                    display: "flex",
+                    justifyContent: "center",   // horizontally center
+                    alignItems: "center",
+                    minHeight: "30vh",
+                    marginTop: "20px",
                 }}
             >
-                <h3
+                <div
                     style={{
-                        textAlign: "center",
-                        color: "#ffffff",
-                        marginBottom: "20px",
-                        fontWeight: "500",
+                        width: "100%",
+                        maxWidth: "700px",
+                        padding: "20px",
+                        borderRadius: "16px",
+                        background: "#141414",
+                        border: "1px solid #222",
+                        boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
                     }}
                 >
-                    📺 Your Watch History
-                </h3>
+                    <h3
+                        style={{
+                            textAlign: "center",
+                            color: "#ffffff",
+                            marginBottom: "20px",
+                            fontWeight: "500",
+                        }}
+                    >
+                        📺 Your Watch History
+                    </h3>
 
-                {history && history.length > 0 ? (
-                    <>
-                        {/* Movie History */}
-                        <h4
-                            style={{
-                                color: "#00bfff",
-                                borderBottom: "1px solid #333",
-                                paddingBottom: "4px",
-                            }}
-                        >
-                            Movie History
-                        </h4>
-                        {history
-                            .filter((h: any) => h.type === "Movie")
-                            .map((h: any, i: number) => {
-                                const dt = new Date(h.watch_time.replace(" ", "T"));
-                                return (
-                                    <p
-                                        key={i}
-                                        style={{
-                                            color: "#f5f5f5",
-                                            background: "#1a1a1a",
-                                            padding: "10px",
-                                            borderRadius: "8px",
-                                            marginBottom: "10px",
-                                        }}
-                                    >
-                                        Watched <b>{h.title}</b> at {dt.toLocaleTimeString()} on{" "}
-                                        {dt.toLocaleDateString()}
-                                    </p>
-                                );
-                            })}
+                    {history && history.length > 0 ? (
+                        <>
+                            <WatchHistoryTable
+                                title=" Movie History"
+                                color="#00bfff"
+                                rows={history.filter((h) => h.type === "Movie")}
+                            />
 
-                        {/* Series History */}
-                        <h4
-                            style={{
-                                color: "#7fff00",
-                                borderBottom: "1px solid #333",
-                                paddingBottom: "4px",
-                                marginTop: "20px",
-                            }}
-                        >
-                            Series History
-                        </h4>
-                        {history
-                            .filter((h: any) => h.type === "Episode")
-                            .map((h: any, i: number) => {
-                                const dt = new Date(h.watch_time.replace(" ", "T"));
-                                return (
-                                    <p
-                                        key={i}
-                                        style={{
-                                            color: "#f5f5f5",
-                                            background: "#1a1a1a",
-                                            padding: "10px",
-                                            borderRadius: "8px",
-                                            marginBottom: "10px",
-                                        }}
-                                    >
-                                        Watched <b>{h.title}</b> — <i>{h.episode_title}</i> at{" "}
-                                        {dt.toLocaleTimeString()} on {dt.toLocaleDateString()}
-                                    </p>
-                                );
-                            })}
-                    </>
-                ) : (
-                    <p style={{ textAlign: "center", color: "#777" }}>
-                        No watch history found.
-                    </p>
-                )}
+                            <WatchHistoryTable
+                                title=" Series History"
+                                color="#7fff00"
+                                rows={history.filter((h) => h.type === "Episode")}
+                            />
+                        </>
+                    ) : (
+                        <p style={{ textAlign: "center", color: "#777" }}>
+                            No watch history found.
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     );
 }
-
 export default MemberHome

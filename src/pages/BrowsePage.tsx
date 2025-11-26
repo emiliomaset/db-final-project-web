@@ -11,14 +11,20 @@ function BrowsePage(){
   const [memberId, setMemberId] = useState<string | null>(localStorage.getItem("userId"));
 
   //Page States
-  const [movies, setMovies] = useState([]);
-  const [movieInfo, setMovieInfo] = useState<any>({});
+  const [content, setContent] = useState([]);
+  const [contentInfo, setContentInfo] = useState<any>({});
 
   
   const [searchTerm, setSearchTerm] = useState("");
   const [awardWinning, setAwardWinning] = useState(false);
   const [notWatched, setNotWatched] = useState(false);
-  const navigate = useNavigate();
+
+    const [openSeries, setOpenSeries] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState({});
+    const [episodes, setEpisodes] = useState({});
+    const [seasonCounts, setSeasonCounts] = useState({});
+
+    const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,19 +35,88 @@ function BrowsePage(){
     .then((res) => res.json())
             .then((data) => {
                 console.log(data)
-                const formatted = data.map((movie) => ({
-                    value: movie.contentId,
-                    label: movie.title,
-                    genre: movie.genre,
-                    release_date: movie.release_date,
-                    imdb_link: movie.imdb_link,
+                const formatted = data.map((item) => ({
+                    value: item.content_id,
+                    label: item.title,
+                    genre: item.genre,
+                    release_date: item.release_date,
+                    imdb_link: item.imdb_link,
+                    contentType: item.contentType,
                 }));
-                setMovies(formatted);
+                setContent(formatted);
             })
         .catch((err) => console.error("Error fetching movies:", err));
   };
 
-  return (
+    async function getContentType(contentId)
+    {
+        const res = await fetch(`${API_BASE_URL}/getmovieorseries`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contentId })   // <-- FIXED
+        });
+        return res.text();
+    }
+
+
+
+    async function loadSeasons(contentId)
+    {
+        const res = await fetch(`${API_BASE_URL}/getnumseasons`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contentId }),
+        });
+
+        const seasons = await res.text();
+        setSeasonCounts(prev => ({ ...prev, [contentId]: Number(seasons) }));
+    }
+
+    async function loadEpisodes(contentId, seasonNum)
+    {
+        const res = await fetch(`${API_BASE_URL}/getepisodes`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contentId,
+                seasonNum,
+            }),
+        });
+
+        const eps = await res.json();
+
+        setEpisodes(prev => ({
+            ...prev,
+            [contentId]: eps,
+        }));
+    }
+
+    async function streamEpisode(contentId, episodeId, seasonNum, userId)
+    {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/movies/stream/episode`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId,
+                    contentId,
+                    episodeId,
+                    seasonNum,
+                }),
+            });
+
+            if (res.ok) {
+                alert("Episode streaming started! Added to your history.");
+            } else {
+                alert("Failed to start episode stream.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error starting streaming.");
+        }
+    }
+
+    return (
     <div
       style={{
         display: "flex",
@@ -164,35 +239,171 @@ function BrowsePage(){
             maxWidth: "1200px",
           }}
         >
-          {movies.length === 0 ? (
+          {content.length === 0 ? (
             <p style={{ color: "white", fontSize: "1.2rem" }}>No results yet. Try a search!</p>
           ) : (
-            movies.map((movie) => (
-              <div
-                key={movie.value}
-                style={{
-                  backgroundColor: "#0d4d5e",
-                  padding: "1rem",
-                  borderRadius: "10px",
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-                }}
-              >
-                <h3 style={{ marginBottom: "0.5rem" }}>{movie.label}</h3>
-                <p style={{ margin: "0.25rem 0" }}>
-                  <strong>Genre:</strong> {movie.genre}
-                </p>
-                <p style={{ margin: "0.25rem 0" }}>
-                  <strong>Release Date:</strong> {movie.release_date}
-                </p>
-                <a
-                  href={movie.imdb_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "#ffd700" }}
+            content.map((item) => (
+                <div
+                    key={item.value}
+                    style={{
+                        backgroundColor: "#0d4d5e",
+                        padding: "1rem",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                    }}
                 >
-                  View on IMDB
-                </a>
-              </div>
+                    <h3 style={{ marginBottom: "0.5rem" }}>{item.label}</h3>
+                    <p><strong>Genre:</strong> {item.genre}</p>
+                    <p><strong>Release Date:</strong> {item.release_date}</p>
+
+                    <a
+                        href={item.imdb_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#ffd700" }}
+                    >
+                        View on IMDB
+                    </a>
+
+                    {/* Movie Streaming Button */}
+                    {item.contentType === "movie" && (
+                        <button
+                            onClick={() => {
+                                fetch(`${API_BASE_URL}/api/movies/stream/movie`, {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        userId: memberId,
+                                        contentId: item.value,
+                                    }),
+                                }).then((res) => {
+                                    if (res.status === 201) alert("Streaming started! Recorded in your history.");
+                                    else alert("Failed to start streaming");
+                                });
+                            }}
+                            style={{
+                                marginTop: "10px",
+                                backgroundColor: "#0084ff",
+                                padding: "8px 14px",
+                                borderRadius: "6px",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "white",
+                            }}
+                        >
+                            ▶ Watch Movie
+                        </button>
+                    )}
+
+                    {/* Series Card  */}
+                    {item.contentType === "series" && (
+                        <>
+                            {/* Series Card Expand Button */}
+                            <button
+                                onClick={async () => {
+                                    const type = await getContentType(item.value);
+
+                                    if (type === "series") {
+                                        setOpenSeries((prev) => (prev === item.value ? null : item.value));
+                                        loadSeasons(item.value);
+                                    }
+                                }}
+                                style={{
+                                    marginTop: "10px",
+                                    backgroundColor: "darkgreen",
+                                    padding: "8px 14px",
+                                    borderRadius: "6px",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    color: "white",
+                                }}
+                            >
+                                📺 View Seasons
+                            </button>
+
+                            {/* Expanded Series Card */}
+                            {openSeries === item.value && (
+                                <div
+                                    style={{
+                                        marginTop: "15px",
+                                        backgroundColor: "#083b46",
+                                        padding: "1rem",
+                                        borderRadius: "10px",
+                                        boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+                                    }}
+                                >
+                                    <h4 style={{ color: "white", marginBottom: "10px" }}>Seasons</h4>
+
+                                    {/* Seasons list */}
+                                    {Array.from({ length: seasonCounts[item.value] || 0 }, (_, i) => (
+                                        <button
+                                            key={i}
+                                            style={{
+                                                width: "100%",
+                                                margin: "6px 0",
+                                                padding: "10px",
+                                                backgroundColor: "#0d4d5e",
+                                                borderRadius: "6px",
+                                                color: "white",
+                                            }}
+                                            onClick={() => {
+                                                setSelectedSeason({ [item.value]: i + 1 });
+                                                loadEpisodes(item.value, i + 1);
+                                            }}
+                                        >
+                                            Season {i + 1}
+                                        </button>
+                                    ))}
+
+                                    {/* Episodes of Season Selected */}
+                                    {selectedSeason[item.value] && episodes[item.value] && (
+                                        <div style={{ marginTop: "15px" }}>
+                                            <h4>Episodes</h4>
+
+                                            {episodes[item.value].map((ep) => (
+                                                <div
+                                                    key={ep.episodeId}
+                                                    style={{
+                                                        padding: "10px",
+                                                        marginBottom: "8px",
+                                                        backgroundColor: "#0a2f38",
+                                                        borderRadius: "8px",
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <span>{ep.title}</span>
+
+                                                    <button
+                                                        onClick={() =>
+                                                            streamEpisode(
+                                                                item.value,
+                                                                ep.episodeId,
+                                                                ep.seasonNum,
+                                                                memberId
+                                                            )
+                                                        }
+                                                        style={{
+                                                            backgroundColor: "#0099ff",
+                                                            padding: "6px 10px",
+                                                            borderRadius: "6px",
+                                                            border: "none",
+                                                            cursor: "pointer",
+                                                            color: "white",
+                                                        }}
+                                                    >
+                                                        ▶ Watch Episode
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
             ))
           )}
         </div>
