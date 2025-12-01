@@ -1,31 +1,31 @@
-import './App.css'
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import MemberHome from "./pages/MemberHome.tsx"
-import LandingPage from "./pages/LandingPage.tsx"
-import AppLayout from "./AppLayout.tsx"
-import AdminHome from "./pages/AdminHome.tsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import WWW from "./components/WWW.tsx";
-import AdminAnalytics from "./components/AdminAnalytics.tsx";
-import BrowsePage from './pages/BrowsePage.tsx';
+import LandingPage from "./pages/LandingPage";
+import BrowsePage from "./pages/BrowsePage";
+import AdminHome from "./pages/AdminHome";
+import MemberHome from "./pages/MemberHome";
+import AdminAnalytics from "./pages/AdminAnalytics";
+import MemberProfile from "./pages/MemberProfile";
+
+import "./App.css";
 
 function App() {
-    return (
-        <>
-            <BrowserRouter>
-                <AppLayout>
-                    <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/member/home" element={<MemberHome />} />
-                        <Route path="/admin/home" element={<AdminHome />} />
-                        <Route path="/www" element={<WWW />} />
-                        <Route path="/analytics" element={<AdminAnalytics />} />
-                        <Route path="/browse" element={<BrowsePage />} />
-                    </Routes>
-                </AppLayout>
-            </BrowserRouter>
-        </>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/browse" element={<BrowsePage />} />
+
+        {/* Admin pages */}
+        <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/analytics" element={<AdminAnalytics />} />
+
+        {/* Member pages */}
+        <Route path="/member/home" element={<MemberHome />} />
+        <Route path="/member/profile" element={<MemberProfile />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

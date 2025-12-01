@@ -5,83 +5,119 @@ import { API_BASE_URL } from "../config";
 function MemberProfile() {
   const navigate = useNavigate();
 
-  const [email] = useState(localStorage.getItem("email") || "");
-  const [memberId, setMemberId] = useState<string | null>(localStorage.getItem("userId"));
-  const [name, setName] = useState<string>(localStorage.getItem("memberName") || "");
-  const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const email = localStorage.getItem("email") || "";
+  const savedName = localStorage.getItem("memberName") || "";
+  const savedId = localStorage.getItem("userId") || "";
+
+  const [userId, setUserId] = useState(savedId);
+  const [name, setName] = useState(savedName);
+  const [streetName, setStreetName] = useState("");
+  const [city, setCity] = useState("");
+  const [stateVal, setStateVal] = useState("");
+  const [zip, setZip] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
-    const fetchInfo = async () => {
+    async function load() {
       if (!email) return;
-      try {
-        const res = await fetch(`${API_BASE_URL}/movies/member-info/${email}`);
-        if (!res.ok) return;
-        const info = await res.json();
-        if (info?.user_id) {
-          setMemberId(info.user_id);
-        }
-        if (info?.name) {
-          setName(info.name);
-        }
-      } catch (e) {
 
+      if (!userId) {
+        const r = await fetch(`${API_BASE_URL}/movies/member-info/${email}`);
+        if (r.ok) {
+          const data = await r.json();
+          if (data?.user_id) {
+            const id = String(data.user_id);
+            setUserId(id);
+            localStorage.setItem("userId", id);
+            if (data?.name) {
+              setName(data.name);
+              localStorage.setItem("memberName", data.name);
+            }
+          }
+        }
       }
-    };
 
-    if (!memberId || !name) fetchInfo();
-  }, [email, memberId, name]);
+      if (userId) {
+        const r = await fetch(`${API_BASE_URL}/members/${userId}`);
+        if (r.ok) {
+          const u = await r.json();
+          setName(u.name || name);
+          setStreetName(u.streetName || "");
+          setCity(u.city || "");
+          setStateVal(u.state || "");
+          setZip(u.zip || "");
+          setPhoneNum(u.phoneNum || "");
+        }
+      }
+    }
+    load();
+  }, [email, userId]);
 
-  const onSave = async (e: React.FormEvent) => {
+  async function save(e: any) {
     e.preventDefault();
     setMessage("");
     setError("");
-
-    if (!memberId) {
-      setError("Missing member identifier. Try reloading the page.");
-      return;
-    }
 
     if (!name.trim()) {
       setError("Name cannot be empty.");
       return;
     }
 
-    setLoading(true);
-    try {
-      const body: any = { name: name.trim() };
-      if (password.trim().length > 0) {
-        body.password = password.trim();
+    if (password || confirmPassword) {
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters.");
+        return;
       }
+      if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+    }
 
-      const res = await fetch(`${API_BASE_URL}/members/${memberId}`, {
+    const updated: any = {
+      name,
+      streetName,
+      city,
+      state: stateVal,
+      zip,
+      phoneNum
+    };
+
+    if (password) updated.password = password;
+
+    setLoading(true);
+
+    try {
+      const r = await fetch(`${API_BASE_URL}/members/${userId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated)
       });
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || `Failed to update profile (status ${res.status})`);
+      if (!r.ok) {
+        setError("Failed to update profile.");
+        setLoading(false);
+        return;
       }
 
-
-      localStorage.setItem("memberName", name.trim());
-      setMessage("Profile updated successfully.");
-      setPassword("");
+      localStorage.setItem("memberName", name);
+      setMessage("Profile updated.");
+      setLoading(false);
 
       setTimeout(() => navigate("/member/home"), 800);
-    } catch (err: any) {
-      setError(err?.message || "Failed to update profile.");
-    } finally {
+
+    } catch {
+      setError("Failed to update profile.");
       setLoading(false);
     }
-  };
+  }
 
   if (!email) {
     navigate("/");
@@ -92,61 +128,60 @@ function MemberProfile() {
     <div style={{ padding: "30px", color: "white", backgroundColor: "cadetblue", minHeight: "100vh" }}>
       <h2 style={{ textAlign: "center" }}>Edit Profile</h2>
 
-      <form onSubmit={onSave} style={{ maxWidth: 420, margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
+      <form onSubmit={save} style={{ maxWidth: 520, margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
         <div style={{ marginBottom: 12 }}>
-          <label style={{ display: "block", marginBottom: 6 }}>Email (read-only)</label>
-          <input
-            type="email"
-            value={email}
-            readOnly
-            style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #333", background: "#1a1a1a", color: "#fff" }}
-          />
+          <label>Email (read-only)</label>
+          <input type="email" value={email} readOnly style={{ width: "100%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
-          <label style={{ display: "block", marginBottom: 6 }}>Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #333", background: "#1a1a1a", color: "#fff" }}
-          />
+          <label>Name *</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: 10 }} />
         </div>
 
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ display: "block", marginBottom: 6 }}>New Password (optional)</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #333", background: "#1a1a1a", color: "#fff" }}
-          />
+        <div style={{ marginBottom: 12 }}>
+          <label>Street</label>
+          <input value={streetName} onChange={(e) => setStreetName(e.target.value)} style={{ width: "100%", padding: 10 }} />
         </div>
 
-        {error && (
-          <div style={{ color: "#ff6b6b", marginBottom: 10 }}>{error}</div>
-        )}
-        {message && (
-          <div style={{ color: "#4cd137", marginBottom: 10 }}>{message}</div>
-        )}
+        <div style={{ marginBottom: 12 }}>
+          <label>City</label>
+          <input value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%", padding: 10 }} />
+        </div>
 
-        <div style={{ display: "flex", gap: 12, justifyContent: "space-between" }}>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "#333", color: "#fff", border: "none", cursor: "pointer" }}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ flex: 2, padding: "10px 14px", borderRadius: 10, background: "#1a1a1a", color: "#fff", border: "none", cursor: "pointer", opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
+        <div style={{ marginBottom: 12 }}>
+          <label>State</label>
+          <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} style={{ width: "100%", padding: 10 }} />
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <label>ZIP</label>
+          <input value={zip} onChange={(e) => setZip(e.target.value)} style={{ width: "100%", padding: 10 }} />
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <label>Phone</label>
+          <input value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ width: "100%", padding: 10 }} />
+        </div>
+
+        <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+          <div style={{ flex: 1 }}>
+            <label>New Password (optional)</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <label>Confirm Password</label>
+            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          </div>
+        </div>
+
+        {error && <div style={{ color: "red", marginBottom: 10 }}>{error}</div>}
+        {message && <div style={{ color: "lightgreen", marginBottom: 10 }}>{message}</div>}
+
+        <div style={{ display: "flex", gap: 12 }}>
+          <button type="button" onClick={() => navigate(-1)} style={{ flex: 1, padding: 10 }}>Cancel</button>
+          <button type="submit" disabled={loading} style={{ flex: 2, padding: 10 }}>{loading ? "Saving..." : "Save"}</button>
         </div>
       </form>
     </div>
