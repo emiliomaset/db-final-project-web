@@ -7,11 +7,11 @@ function Login() {
 
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { name: string; value: string; }; }) => {
         setLoginData({...loginData, [e.target.name] : e.target.value})
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         try {
             e.preventDefault() // prevents page refresh
             const response = await fetch(`${API_BASE_URL}/api/login`, {
@@ -31,7 +31,10 @@ function Login() {
 
             switch (result) {
                 case "Member":
-                    navigate('/member/home', {state : {email : loginData.email}});
+                    // Save email to localStorage
+                    localStorage.setItem("email", loginData.email);
+
+                    navigate('/member/home');
                     break;
 
                 case "Admin":
@@ -66,7 +69,7 @@ function Login() {
 
             <div className="form-group">
                 <input
-                    type="text"
+                    type="password"
                     name="password"
                     value={loginData.password}
                     placeholder="Enter password..."
@@ -75,7 +78,7 @@ function Login() {
                 />
             </div>
 
-            <button className="login-btn" onClick={handleSubmit}>Login</button>
+            <button className="btn blue-btn" onClick={handleSubmit}>Login</button>
         </form>
 </>
     ) // end of return

@@ -1,10 +1,9 @@
 import Select from "react-select";
-import {use, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
 function WWW() {
     const [contentOptions, setContentOptions] = useState([]);
-    const [rawContent, setRawContent] = useState([])
     const [idOfContentSelected, setIdOfContentSelected] = useState("")
     const [typeOfContentSelected, setTypeOfContentSelected] = useState("")
     const [numSeasonSelected, setNumSeasonSelected] = useState(0)
@@ -12,24 +11,20 @@ function WWW() {
     const [viewCount, setViewCount] = useState(-1)
     const [numSeasons, setNumSeasons] = useState(0)
     const [listOfEpisodes, setListOfEpisodes] = useState([])
+    const [arrayOfViewers, setArrayOfViewers] = useState([])
 
-    console.log(numSeasonSelected)
-
-
-    function getSeasonsAsOptions(num) {
-            const seasons = []
-            for (let i = 0; i < num;i++) {
-                seasons.push({label: `Season ${i+1}` , value:`Season ${i+1}` })
-            }
-            return seasons;
+    function getSeasonsAsOptions(numOfSeasonsForSeries: number) { // makes array of options for select season field
+        const seasons = []
+        for (let i = 1; i <= numOfSeasonsForSeries; i++) {
+            seasons.push({label: `Season ${i}`, value: i.toString()})
         }
+        return seasons;
+    }
 
-
-    useEffect(() => { // load content contentOptions
+    useEffect(() => { // makes array contentOptions for options for select content field
         fetch(`${API_BASE_URL}/getallcontent`)
             .then(response => response.json())
             .then(data => {
-                setRawContent(data)
                 const formattedOptions = data.map((content: { contentId: string; title: string; }) => (
                     {value: content.contentId, label: content.title}
                 ));
@@ -37,10 +32,11 @@ function WWW() {
             })
     }, []);
 
-    useEffect(() => {
-        if (!idOfContentSelected) { // prevents from running on first render
+    useEffect(() => { // gets type ("movie" or "series") of content selected
+        if (!idOfContentSelected) { // prevents from running on first render since idOfContentSelected is empty string
             return;
         }
+        // setArrayOfViewers([])
 
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
@@ -53,29 +49,12 @@ function WWW() {
             .catch(error => console.error("Error fetching content type:", error));
     }, [idOfContentSelected]);
 
-    useEffect(() => {
-        if (!typeOfContentSelected) { // prevents from running on first render
-            return;
-        }
-
-        fetch(`${API_BASE_URL}/getmovieorseries`, {
-            method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: idOfContentSelected
-        }).then(response => response.text())
-            .then(contentType => {
-                setTypeOfContentSelected(contentType);
-            })
-            .catch(error => console.error("Error fetching content type:", error));
-    }, [idOfContentSelected]);
-
-    useEffect(() => {
-
+    useEffect(() => { // once user selects content, either get view count for it if it is a movie, or get num of seasons if its a series
         if (!typeOfContentSelected) {
             return;
         }
-
-        setViewCount(-1)
+        // setViewCount(-1)
+        // setArrayOfViewers([])
 
         if (typeOfContentSelected === "movie") {
             fetch(`${API_BASE_URL}/getmovieviewcount`, {
@@ -100,9 +79,9 @@ function WWW() {
                 })
                 .catch(error => console.error("Error fetching content type:", error));
         }
-    }, [typeOfContentSelected])
+    }, [idOfContentSelected, typeOfContentSelected])
 
-    useEffect(() => {
+    useEffect(() => { // gets names of episodes in selected season of a series
 
         if (!numSeasonSelected) {
             return
@@ -123,13 +102,13 @@ function WWW() {
                     setListOfEpisodes(formattedOptions);
 
                 })
-                .catch(error => console.error("Error fetching content type:", error));
+                .catch(error => console.error("Error:", error));
 
         }
 
-    }, [numSeasonSelected]);
+    }, [idOfContentSelected, numSeasonSelected]);
 
-    useEffect(()=> {
+    useEffect(()=> { // gets episode view count once an episode is selected
         fetch(`${API_BASE_URL}/getepisodeviewcount`, {
             method: 'POST',
             headers: {"Content-Type": "text/plain"},
@@ -138,46 +117,146 @@ function WWW() {
             .then(numViews => {
                 setViewCount(parseInt(numViews));
             })
-            .catch(error => console.error("Error fetching content type:", error));
+            .catch(error => console.error("Error:", error));
 
     },[episodeIdOfEpisodeSelected]);
 
+    useEffect( () => { // gets names of viewers for a movie once idOfContentSelected, or gets names for an episode of a series once selected
+        async function getViewers(id: string) {
+            const response = await fetch(`${API_BASE_URL}/getviewers/${id}/${typeOfContentSelected}`);
+            const viewersArray = await response.json();
+            console.log("viewersArray", viewersArray)
+            const arrayOfViewers = viewersArray.map( (viewer: { name: string; timesViewed: string; lastView: string; }) => ({name: viewer.name, numTimesViewed: viewer.timesViewed, lastViewed: viewer.lastView.toString()}) );
+
+            setArrayOfViewers(arrayOfViewers)
+        }
+
+        if (typeOfContentSelected === "movie") {
+            getViewers(idOfContentSelected);
+        }
+
+        if (episodeIdOfEpisodeSelected != "") {
+            getViewers(episodeIdOfEpisodeSelected)
+        }
+
+    }, [episodeIdOfEpisodeSelected, idOfContentSelected, typeOfContentSelected])
+
+    useEffect(() => { // when idOfContentSelected changes, reset all states that rely on it
+        setNumSeasonSelected(0)
+        setEpisodeIdOfEpisodeSelected("");
+        setViewCount(-1)
+        setArrayOfViewers([])
+    }, [idOfContentSelected]);
+
+    useEffect(() => { // when numSeasonSelected changes, reset all states that rely on it
+        setEpisodeIdOfEpisodeSelected("");
+        setViewCount(-1);
+        setArrayOfViewers([]);
+    }, [numSeasonSelected]);
 
     return (
-        <>
-            <Select
-                options={contentOptions}
-                onChange={(data) => setIdOfContentSelected(data.value)}
-            />
+        <div className="admin-home-content">
+            <div className="form-group">
+                <label>Title of Content</label>
+                <Select
+                    options={contentOptions}
+                    onChange={(data) => setIdOfContentSelected(data.value)
+                    }
+                />
+            </div>
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    View count: {viewCount}
+                    <p>Total View count: {viewCount}</p>
+
+                    {viewCount > 0 && (<table
+                        cellPadding="8"
+                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}
+                    >
+                        <thead style={{ background: "#f0f0f0" }}>
+                        <tr>
+                            <th>Viewer</th>
+                            <th>Number of Times Viewed</th>
+                            <th>Last Viewed</th>
+                        </tr>
+                        </thead>
+                        <tbody style={{ background: "#f0f0f0" }}>
+                        {arrayOfViewers.map((viewer: any, i) => (
+                            <tr key={i}>
+                                <td>{viewer.name}</td>
+                                <td>{viewer.numTimesViewed}</td>
+                                <td>{viewer.lastViewed}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>)}
+
                 </>
             )}
 
             {typeOfContentSelected === "series" && (
                 <>
-                    <Select
-                        options={getSeasonsAsOptions(numSeasons)}
-                        onChange={(data) => setNumSeasonSelected(parseInt(data.label.slice(-1)))}
-                    />
+                    <div className="form-group">
+                        <label>Select Season Number</label>
+                        <Select
+                            options={getSeasonsAsOptions(numSeasons)}
+                            onChange={(data) => setNumSeasonSelected(data ? parseInt(data.value) : 0)}
+                            isClearable
+                        />
+                    </div>
 
-                    <Select
-                        options={listOfEpisodes}
-                        onChange={data=> setEpisodeIdOfEpisodeSelected(data.value)}
-                    />
+                    {numSeasonSelected !== 0 && (
+                        <>
+                            <div className="form-group">
+                                <label>Select Episode Title</label>
+                                <Select
+                                    options={listOfEpisodes}
+                                    value={episodeIdOfEpisodeSelected ? // make the value displayed in this field either the title of the
+                                        // episode that has id matching episodeIdOfEpisodeSelected, or if
+                                        // episodeIdOfEpisodeSelected is "", make it null so nothing is displayed
+                                        listOfEpisodes.find((episode) => episode.value === episodeIdOfEpisodeSelected)
+                                        : null
+                                    }
+                                    onChange={(data) =>
+                                        setEpisodeIdOfEpisodeSelected(data.value)
+                                    }
+                                />
+                            </div>
 
-                    {viewCount >= 0 && (<>View count: {viewCount}</>)}
+                            {viewCount >= 0 && <p>Total View count: {viewCount}</p>}
+
+                            {arrayOfViewers.length > 0 && (
+                                <>
+                                    {viewCount > 0 && (<table
+                                        cellPadding="8"
+                                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}
+                                    >
+                                        <thead style={{ background: "#f0f0f0" }}>
+                                        <tr>
+                                            <th>Viewer</th>
+                                            <th>Number of Times Viewed</th>
+                                            <th>Last Viewed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style={{ background: "#f0f0f0" }}>
+                                        {arrayOfViewers.map((viewer: any, i) => (
+                                            <tr key={i}>
+                                                <td>{viewer.name}</td>
+                                                <td>{viewer.numTimesViewed}</td>
+                                                <td>{viewer.lastViewed}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>)}
+                                </>
+                            )}
+                        </>)
+                    }
                 </>
-
-
-            )
+            ) // end of precedent stuff in series stuff
             }
-
-
-        </>
-    );
+        </div> // end of div classname="admin-home-content"
+    ); // end of return
 
 } //end of WWW
 
