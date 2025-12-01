@@ -32,11 +32,11 @@ function MemberHome(){
         async function fetchData() {
             try {
                 //Get all sequels
-                const sequelRes = await fetch(`${API_BASE_URL}/api/movies/sequels`);
+                const sequelRes = await fetch(`${API_BASE_URL}/movies/sequels`);
                 const sequelData = await sequelRes.json();
                 setSequels(sequelData);
 
-                const infoRes = await fetch(`${API_BASE_URL}/api/movies/member-info/${email}`);
+                const infoRes = await fetch(`${API_BASE_URL}/movies/member-info/${email}`);
                 const info = await infoRes.json();
 
                 if (info?.user_id) {
@@ -98,7 +98,7 @@ function MemberHome(){
         });
 
         // Fetch sequel for the selected movie
-        fetch(`${API_BASE_URL}/api/movies/sequels/${selectedMovie.value}`)
+        fetch(`${API_BASE_URL}/movies/sequels/${selectedMovie.value}`)
             .then(res => res.json())
             .then(data => {
                 // backend returns [{ sequel_movie: "Now You See Me 2" }, ...]
@@ -113,7 +113,7 @@ function MemberHome(){
     //Fetch watch history
     useEffect(() => {
         if (memberId) {
-            fetch(`${API_BASE_URL}/api/movies/all-history/${memberId}`)
+            fetch(`${API_BASE_URL}/movies/all-history/${memberId}`)
                 .then(res => res.json())
                 .then(data => setHistory(data))
                 .catch(err => console.error("Error fetching watch history:", err));
@@ -277,6 +277,24 @@ function MemberHome(){
                 }}
             >👋Welcome back, {memberName || email}
             </h2>
+            {/* Quick actions */}
+            <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "20px" }}>
+                <button
+                    onClick={() => navigate("/member/profile")}
+                    style={{
+                        textAlign: "center",
+                        borderRadius: "12px",
+                        backgroundColor: "#1a1a1a",
+                        fontSize: "0.95rem",
+                        color: "white",
+                        border: "none",
+                        padding: "0.5rem 1rem",
+                        cursor: "pointer",
+                    }}
+                >
+                    Edit Profile
+                </button>
+            </div>
 
             {/* Movie Selection Bar */}
             <div style={{ maxWidth: "360px", margin: "30px auto", textAlign: "center" }}>

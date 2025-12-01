@@ -7,12 +7,12 @@ function AdminAnalytics() {
 
   // Fetch both analytics datasets on page load
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/movies/trends/last24hours`)
+    fetch(`${API_BASE_URL}/movies/trends/last24hours`)
       .then((res) => res.json())
       .then((data) => setTrendData(data))
       .catch((err) => console.error("Error fetching 24-hour trends:", err));
 
-    fetch(`${API_BASE_URL}/api/movies/top10/lastmonth`)
+    fetch(`${API_BASE_URL}/movies/top10/lastmonth`)
       .then((res) => res.json())
       .then((data) => setTopTenData(data))
       .catch((err) => console.error("Error fetching top 10 data:", err));

@@ -94,7 +94,7 @@ function BrowsePage(){
     async function streamEpisode(contentId, episodeId, seasonNum, userId)
     {
         try {
-            const res = await fetch(`${API_BASE_URL}/api/movies/stream/episode`, {
+            const res = await fetch(`${API_BASE_URL}/movies/stream/episode`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -269,7 +269,7 @@ function BrowsePage(){
                     {item.contentType === "movie" && (
                         <button
                             onClick={() => {
-                                fetch(`${API_BASE_URL}/api/movies/stream/movie`, {
+                                fetch(`${API_BASE_URL}/movies/stream/movie`, {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({

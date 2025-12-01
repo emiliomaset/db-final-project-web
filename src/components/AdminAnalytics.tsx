@@ -5,14 +5,14 @@ function AdminAnalytics() {
   const [trendData, setTrendData] = useState([]);
   const [topTenData, setTopTenData] = useState([]);
 
-  // Fetch both analytics datasets on page load
+
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/movies/trends/last24hours`)
+    fetch(`${API_BASE_URL}/movies/trends/last24hours`)
       .then((res) => res.json())
       .then((data) => setTrendData(data))
       .catch((err) => console.error("Error fetching 24-hour trends:", err));
 
-    fetch(`${API_BASE_URL}/api/movies/top10/lastmonth`)
+    fetch(`${API_BASE_URL}/movies/top10/lastmonth`)
       .then((res) => res.json())
       .then((data) => setTopTenData(data))
       .catch((err) => console.error("Error fetching top 10 data:", err));
@@ -22,7 +22,7 @@ function AdminAnalytics() {
     <div style={{ padding: "40px" }}>
       <h2>📊 Streaming Analytics Dashboard</h2>
 
-      {/* ---- Trend Section ---- */}
+
       <section style={{ marginTop: "30px" }}>
         <h3>🎬 Streaming Trend (Last 24 Hours)</h3>
         {trendData.length > 0 ? (
@@ -53,7 +53,7 @@ function AdminAnalytics() {
         )}
       </section>
 
-      {/* ---- Top 10 Section ---- */}
+
       <section style={{ marginTop: "50px" }}>
         <h3>🏆 Top 10 Movies/Series (Last Month)</h3>
         {topTenData.length > 0 ? (
