@@ -1,31 +1,36 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import './App.css'
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import MemberHome from "./pages/MemberHome.tsx"
+import LandingPage from "./pages/LandingPage.tsx"
+import AppLayout from "./AppLayout.tsx"
+import AdminHome from "./pages/AdminHome.tsx";
+import WWW from "./components/WWW.tsx";
+import AdminAnalytics from "./components/AdminAnalytics.tsx";
+import BrowsePage from './pages/BrowsePage.tsx';
+import ContentWindow from "./components/ContentWindow.tsx";
 
-import LandingPage from "./pages/LandingPage";
-import BrowsePage from "./pages/BrowsePage";
-import AdminHome from "./pages/AdminHome";
-import MemberHome from "./pages/MemberHome";
-import AdminAnalytics from "./pages/AdminAnalytics";
-import MemberProfile from "./pages/MemberProfile";
-
-import "./App.css";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/browse" element={<BrowsePage />} />
+    return (
+        <>
 
-        {/* Admin pages */}
-        <Route path="/admin/home" element={<AdminHome />} />
-        <Route path="/admin/analytics" element={<AdminAnalytics />} />
+        <BrowserRouter>
+            <AppLayout>
+            <Routes>
+                <Route path="/" element={<LandingPage />}></Route>
+                <Route path="/member/home" element={<MemberHome />} />
+                <Route path="/admin/home" element={<AdminHome />} />
+                <Route path="/www" element={<WWW />} />
+                <Route path="/analytics" element={<AdminAnalytics/>} />
+                <Route path="/browse" element={<BrowsePage/>} />
+                <Route path="/content/:contentId" element={<ContentWindow />} />
+            </Routes>
+            </AppLayout>
+        </BrowserRouter>
 
-        {/* Member pages */}
-        <Route path="/member/home" element={<MemberHome />} />
-        <Route path="/member/profile" element={<MemberProfile />} />
-      </Routes>
-    </Router>
-  );
-}
 
-export default App;
+        </>
+    ) // end of return
+} // end of App
+
+export default App

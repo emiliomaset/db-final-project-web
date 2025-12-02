@@ -214,7 +214,7 @@ function MemberHome(){
             style={{
                 padding: "30px",
                 color: "white",
-                backgroundColor: "cadetblue",
+                backgroundColor: "#1c1c1c",
                 minHeight: "100vh",
                 fontFamily: "Inter, sans-serif",
             }}>
@@ -233,7 +233,7 @@ function MemberHome(){
                     style={{
                         textAlign: "center",
                         borderRadius: "12px",
-                        backgroundColor: "#1a1a1a",
+                        backgroundColor: "black",
                         fontSize: "1rem",
                         minWidth: "min-content",
                         width: "15vw",
@@ -251,7 +251,7 @@ function MemberHome(){
                     style={{
                         textAlign: "center",
                         borderRadius: "12px",
-                        backgroundColor: "#1a1a1a",
+                        backgroundColor: "black",
                         fontSize: "1rem",
                         minWidth: "min-content",
                         width: "15vw",
@@ -294,39 +294,6 @@ function MemberHome(){
                 >
                     Edit Profile
                 </button>
-            </div>
-
-            {/* Movie Selection Bar */}
-            <div style={{ maxWidth: "360px", margin: "30px auto", textAlign: "center" }}>
-                <h3 style={{ marginBottom: "10px", color: "#ffffff" }}>🎥 Browse All Content</h3>
-                <Select
-                    options={movies}
-                    onChange={(data) => setSelectedMovie(data)}
-                    placeholder="Choose a movie or a series..."
-                    styles={{
-                        control: (base) => ({
-                            ...base,
-                            backgroundColor: "#1a1a1a",
-                            color: "#fff",
-                            borderRadius: "8px",
-                            border: "1px solid #333",
-                        }),
-                        singleValue: (base) => ({
-                            ...base,
-                            color: "#fff",
-                        }),
-                        menu: (base) => ({
-                            ...base,
-                            backgroundColor: "#1a1a1a",
-                            color: "#fff",
-                        }),
-                        option: (base, { isFocused }) => ({
-                            ...base,
-                            backgroundColor: isFocused ? "#333" : "#1a1a1a",
-                            color: "#fff",
-                        }),
-                    }}
-                />
             </div>
 
             {/* Movie Information Card */}
@@ -407,7 +374,7 @@ function MemberHome(){
             <div
                 style={{
                     display: "flex",
-                    justifyContent: "center",   // horizontally center
+                    justifyContent: "center",
                     alignItems: "center",
                     minHeight: "30vh",
                     marginTop: "20px",
@@ -419,7 +386,7 @@ function MemberHome(){
                         maxWidth: "700px",
                         padding: "20px",
                         borderRadius: "16px",
-                        background: "#141414",
+                        background: "black",
                         border: "1px solid #222",
                         boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
                     }}
@@ -437,17 +404,20 @@ function MemberHome(){
 
                     {history && history.length > 0 ? (
                         <>
-                            <WatchHistoryTable
-                                title=" Movie History"
-                                color="#00bfff"
-                                rows={history.filter((h) => h.type === "Movie")}
-                            />
-
-                            <WatchHistoryTable
-                                title=" Series History"
-                                color="#7fff00"
-                                rows={history.filter((h) => h.type === "Episode")}
-                            />
+                            <div className="scrollbar-table" style={{ maxHeight: "300px", overflow: "hidden", marginBottom: "20px" }}>
+                                <WatchHistoryTable
+                                    title=" Movie History"
+                                    color="red"
+                                    rows={history.filter((h) => h.type === "Movie")}
+                                />
+                            </div>
+                            <div className="scrollbar-table" style={{ maxHeight: "300px", overflow: "hidden" }}>
+                                <WatchHistoryTable
+                                    title=" Series History"
+                                    color="rgb(184,198,2)"
+                                    rows={history.filter((h) => h.type === "Episode")}
+                                />
+                            </div>
                         </>
                     ) : (
                         <p style={{ textAlign: "center", color: "#777" }}>

@@ -86,6 +86,39 @@ label {
     font-weight: 700;
 }
 
+.scrollbar-table table {
+    display: block;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.scrollbar-table thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    position: sticky;
+    top: 0;
+    background-color: #141414;
+    z-index: 10;
+}
+
+.scrollbar-table tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.scrollbar-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+
 
 
 
