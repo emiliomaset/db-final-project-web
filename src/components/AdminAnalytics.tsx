@@ -27,7 +27,6 @@ function AdminAnalytics() {
         <h3>🎬 Streaming Trend (Last 24 Hours)</h3>
         {trendData.length > 0 ? (
           <table
-            border="1"
             cellPadding="8"
             style={{ marginTop: "10px", borderCollapse: "collapse", width: "100%" }}
           >
@@ -58,7 +57,6 @@ function AdminAnalytics() {
         <h3>🏆 Top 10 Movies/Series (Last Month)</h3>
         {topTenData.length > 0 ? (
           <table
-            border="1"
             cellPadding="8"
             style={{ marginTop: "10px", borderCollapse: "collapse", width: "100%" }}
           >

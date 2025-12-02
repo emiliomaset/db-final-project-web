@@ -3,6 +3,7 @@ import {useState} from "react";
 import "./AdminHome.css"
 import WWW from "../components/WWW.tsx";
 import AdminAnalytics from "../components/AdminAnalytics.tsx";
+import EditMembers from "../components/EditMembers.tsx";
 
 function AdminHome() {
     const navigate = useNavigate();
@@ -12,42 +13,55 @@ function AdminHome() {
     const [hasClickedAnOption, setHasClickedAnOption] = useState(false)
     const [hasClickedWhosWatchedWhat, setHasClickedWhosWatchedWhat] = useState(false)
     const [hasClickedAnalytics, setHasClickedAnalytics] = useState(false)
+    const [hasClickedEditMembers, setHasClickedEditMembers] = useState(false)
 
     return(
         <>
-        <div className="admin-toolbar">
-            <button className="btn blue-btn" onClick={() => {
-                setHasClickedAnOption(true)
-                setHasClickedWhosWatchedWhat(true)
-                setHasClickedAnalytics(false)
+            <div className="admin-toolbar">
+                <button className="btn blue-btn" onClick={() => {
+                    setHasClickedAnOption(true)
+                    setHasClickedWhosWatchedWhat(true)
+                    setHasClickedAnalytics(false)
+                    setHasClickedEditMembers(false)}
+                }> Who's Watched What?</button>
 
-            }
-            }> Who's Watched What?</button>
+                <button className="btn blue-btn" onClick={() => {
+                    setHasClickedAnOption(true)
+                    setHasClickedAnalytics(true)
+                    setHasClickedWhosWatchedWhat(false)
+                    setHasClickedEditMembers(false)}
+                }>Analytics</button>
 
-            <button className="btn blue-btn" onClick={() => {
-                setHasClickedAnOption(true)
-                setHasClickedAnalytics(true)
-                setHasClickedWhosWatchedWhat(false)
-            }
-            }>Analytics</button>
+                <button className="btn blue-btn" onClick={() => {
+                    setHasClickedAnOption(true)
+                    setHasClickedEditMembers(true)
+                    setHasClickedAnalytics(false)
+                    setHasClickedWhosWatchedWhat(false)}
+                }>Edit Members</button>
 
-            <button className="btn blue-btn" onClick={() => navigate("/")}>
-                Logout
-            </button>
+                <button className="btn blue-btn" onClick={() => navigate("/")}>
+                    Logout
+                </button>
 
-        </div>
+            </div>
 
-            {!hasClickedAnOption && (
-                <div className="admin-home-content">
-                    <h1>Welcome, {email}, to the admin interface!</h1>
-                    <h2>Please select an option above!</h2>
+            <div className="admin-home-container">
 
-                </div>
-            )}
+                {!hasClickedAnOption && (
+                    <div className="admin-home-content">
+                        <h1>Welcome, {email}, to the admin interface!</h1>
+                        <h2>Please select an option above!</h2>
 
-            {hasClickedWhosWatchedWhat && <WWW/>}
+                    </div>
+                )}
 
-            {hasClickedAnalytics && <AdminAnalytics/>}
+                {hasClickedWhosWatchedWhat && <WWW/>}
+
+                {hasClickedAnalytics && <AdminAnalytics/>}
+
+                {hasClickedEditMembers && <EditMembers/>}
+
+            </div>
 
         </>
     ) // end of return

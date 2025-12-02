@@ -2,6 +2,14 @@ import Select from "react-select";
 import {useEffect, useState} from "react";
 import {API_BASE_URL} from "../config.ts";
 
+interface Viewer {
+    name:string,
+    numTimesViewed: string,
+    lastViewed:string
+
+
+}
+
 function WWW() {
     const [contentOptions, setContentOptions] = useState([]);
     const [idOfContentSelected, setIdOfContentSelected] = useState("")
@@ -11,7 +19,7 @@ function WWW() {
     const [viewCount, setViewCount] = useState(-1)
     const [numSeasons, setNumSeasons] = useState(0)
     const [listOfEpisodes, setListOfEpisodes] = useState([])
-    const [arrayOfViewers, setArrayOfViewers] = useState([])
+    const [arrayOfViewers, setArrayOfViewers] = useState<Viewer[]>([])
 
     function getSeasonsAsOptions(numOfSeasonsForSeries: number) { // makes array of options for select season field
         const seasons = []
@@ -167,7 +175,7 @@ function WWW() {
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    <p>Total View count: {viewCount}</p>
+                    <p>Total View Count: {viewCount}</p>
 
                     {viewCount > 0 && (<table
                         cellPadding="8"
@@ -181,7 +189,7 @@ function WWW() {
                         </tr>
                         </thead>
                         <tbody style={{ background: "#f0f0f0" }}>
-                        {arrayOfViewers.map((viewer: any, i) => (
+                        {arrayOfViewers.map((viewer: Viewer, i) => (
                             <tr key={i}>
                                 <td>{viewer.name}</td>
                                 <td>{viewer.numTimesViewed}</td>
@@ -239,7 +247,7 @@ function WWW() {
                                         </tr>
                                         </thead>
                                         <tbody style={{ background: "#f0f0f0" }}>
-                                        {arrayOfViewers.map((viewer: any, i) => (
+                                        {arrayOfViewers.map((viewer: Viewer, i) => (
                                             <tr key={i}>
                                                 <td>{viewer.name}</td>
                                                 <td>{viewer.numTimesViewed}</td>
