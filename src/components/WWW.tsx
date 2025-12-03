@@ -19,7 +19,7 @@ function WWW() {
     const [listOfEpisodes, setListOfEpisodes] = useState([])
     const [arrayOfViewers, setArrayOfViewers] = useState<Viewer[]>([])
 
-    function getSeasonsAsOptions(numOfSeasonsForSeries: number) { // makes array of options for select season field
+    function getSeasonsAsOptions(numOfSeasonsForSeries: number) {
         const seasons = []
         for (let i = 1; i <= numOfSeasonsForSeries; i++) {
             seasons.push({label: `Season ${i}`, value: i.toString()})
@@ -27,7 +27,7 @@ function WWW() {
         return seasons;
     }
 
-    useEffect(() => { // makes array contentOptions for options for select content field
+    useEffect(() => {
         fetch(`${API_BASE_URL}/getallcontent`)
             .then(response => response.json())
             .then(data => {
@@ -38,16 +38,15 @@ function WWW() {
             })
     }, []);
 
-    useEffect(() => { // gets type ("movie" or "series") of content selected
-        if (!idOfContentSelected) { // prevents from running on first render since idOfContentSelected is empty string
+    useEffect(() => {
+        if (!idOfContentSelected) {
             return;
         }
-        // setArrayOfViewers([])
 
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: idOfContentSelected
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ contentId: idOfContentSelected })
         }).then(response => response.text())
             .then(contentType => {
                 setTypeOfContentSelected(contentType);
@@ -55,18 +54,16 @@ function WWW() {
             .catch(error => console.error("Error fetching content type:", error));
     }, [idOfContentSelected]);
 
-    useEffect(() => { // once user selects content, either get view count for it if it is a movie, or get num of seasons if its a series
+    useEffect(() => {
         if (!typeOfContentSelected) {
             return;
         }
-        // setViewCount(-1)
-        // setArrayOfViewers([])
 
         if (typeOfContentSelected === "movie") {
             fetch(`${API_BASE_URL}/getmovieviewcount`, {
                 method: 'POST',
-                headers: {"Content-Type": "text/plain"},
-                body: idOfContentSelected
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ contentId: idOfContentSelected })
             }).then(response => response.text())
                 .then(numViews => {
                     setViewCount(parseInt(numViews));
@@ -77,8 +74,8 @@ function WWW() {
         else {
             fetch(`${API_BASE_URL}/getnumseasons`, {
                 method: 'POST',
-                headers: {"Content-Type": "text/plain"},
-                body: idOfContentSelected
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ contentId: idOfContentSelected })
             }).then(response => response.text())
                 .then(numOfSeasons => {
                     setNumSeasons(parseInt(numOfSeasons));
@@ -87,7 +84,7 @@ function WWW() {
         }
     }, [idOfContentSelected, typeOfContentSelected])
 
-    useEffect(() => { // gets names of episodes in selected season of a series
+    useEffect(() => {
 
         if (!numSeasonSelected) {
             return
@@ -114,20 +111,22 @@ function WWW() {
 
     }, [idOfContentSelected, numSeasonSelected]);
 
-    useEffect(()=> { // gets episode view count once an episode is selected
+    useEffect(() => {
+        if (!episodeIdOfEpisodeSelected) return;
+
         fetch(`${API_BASE_URL}/getepisodeviewcount`, {
             method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: episodeIdOfEpisodeSelected
-        }).then(response => response.text())
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ episodeId: episodeIdOfEpisodeSelected })
+        })
+            .then(res => res.text())
             .then(numViews => {
                 setViewCount(parseInt(numViews));
             })
-            .catch(error => console.error("Error:", error));
+            .catch(err => console.error("Error:", err));
+    }, [episodeIdOfEpisodeSelected]);
 
-    },[episodeIdOfEpisodeSelected]);
-
-    useEffect( () => { // gets names of viewers for a movie once idOfContentSelected, or gets names for an episode of a series once selected
+    useEffect( () => {
         async function getViewers(id: string) {
             const response = await fetch(`${API_BASE_URL}/getviewers/${id}/${typeOfContentSelected}`);
             const viewersArray = await response.json();
@@ -147,14 +146,14 @@ function WWW() {
 
     }, [episodeIdOfEpisodeSelected, idOfContentSelected, typeOfContentSelected])
 
-    useEffect(() => { // when idOfContentSelected changes, reset all states that rely on it
+    useEffect(() => {
         setNumSeasonSelected(0)
         setEpisodeIdOfEpisodeSelected("");
         setViewCount(-1)
         setArrayOfViewers([])
     }, [idOfContentSelected]);
 
-    useEffect(() => { // when numSeasonSelected changes, reset all states that rely on it
+    useEffect(() => {
         setEpisodeIdOfEpisodeSelected("");
         setViewCount(-1);
         setArrayOfViewers([]);
@@ -217,9 +216,7 @@ function WWW() {
                                 <label>Select Episode Title</label>
                                 <Select
                                     options={listOfEpisodes}
-                                    value={episodeIdOfEpisodeSelected ? // make the value displayed in this field either the title of the
-                                        // episode that has id matching episodeIdOfEpisodeSelected, or if
-                                        // episodeIdOfEpisodeSelected is "", make it null so nothing is displayed
+                                    value={episodeIdOfEpisodeSelected ?
                                         listOfEpisodes.find((episode) => episode.value === episodeIdOfEpisodeSelected)
                                         : null
                                     }
@@ -259,11 +256,11 @@ function WWW() {
                         </>)
                     }
                 </>
-            ) // end of precedent stuff in series stuff
+            )
             }
-        </div> // end of div classname="admin-home-content"
-    ); // end of return
+        </div>
+    );
 
-} //end of WWW
+}
 
 export default WWW;

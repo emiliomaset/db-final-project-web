@@ -2,7 +2,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import "./AdminHome.css"
 import WWW from "../components/WWW.tsx";
-import AdminAnalytics from "../components/AdminAnalytics.tsx";
+import AdminAnalytics from "./AdminAnalytics.tsx";
 import EditMembers from "../components/EditMembers.tsx";
 
 function AdminHome() {
@@ -64,7 +64,7 @@ function AdminHome() {
             </div>
 
         </>
-    ) // end of return
-} //end of AdminHome
+    )
+}
 
 export default AdminHome;
