@@ -6,8 +6,6 @@ interface Viewer {
     name:string,
     numTimesViewed: string,
     lastViewed:string
-
-
 }
 
 function WWW() {

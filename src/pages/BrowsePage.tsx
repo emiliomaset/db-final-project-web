@@ -240,7 +240,7 @@ function BrowsePage(){
           }}
         >
           {content.length === 0 ? (
-            <p style={{ color: "white", fontSize: "1.2rem" }}>No results yet. Try a search!</p>
+            <p style={{ color: "white", fontSize: "1.2rem" , margin: "auto"}}>No results yet. Try a search!</p>
           ) : (
             content.map((item) => (
                 <div
