@@ -101,7 +101,7 @@ function ContentDetails() {
     };
 
     const streamMovie = () => {
-        fetch(`${API_BASE_URL}/api/movies/stream/movie`, {
+        fetch(`${API_BASE_URL}/movies/stream/movie`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: memberId, contentId }),
@@ -112,7 +112,7 @@ function ContentDetails() {
     };
 
     const streamEpisode = (ep) => {
-        fetch(`${API_BASE_URL}/api/movies/stream/episode`, {
+        fetch(`${API_BASE_URL}/movies/stream/episode`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -131,7 +131,7 @@ function ContentDetails() {
     useEffect(() => {
         if (!contentId || type !== "movie") return;
 
-        fetch(`${API_BASE_URL}/api/movies/sequels/${contentId}`)
+        fetch(`${API_BASE_URL}/movies/sequels/${contentId}`)
             .then(res => res.json())
             .then(data => {
                 setSequels(data.map((r: any) => r.sequel_movie));

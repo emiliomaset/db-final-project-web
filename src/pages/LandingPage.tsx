@@ -1,4 +1,4 @@
-import Login from "../components/Login"
+import Login from "./Login.tsx"
 import "./LandingPage.css"
 
 function LandingPage(){

@@ -1,5 +1,6 @@
 import './App.css'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Login from "./pages/Login.tsx";
 import MemberHome from "./pages/MemberHome.tsx"
 import LandingPage from "./pages/LandingPage.tsx"
 import AppLayout from "./AppLayout.tsx"
@@ -18,6 +19,7 @@ function App() {
             <AppLayout>
             <Routes>
                 <Route path="/" element={<LandingPage />}></Route>
+                <Route path="/login" element={<Login />} />
                 <Route path="/member/home" element={<MemberHome />} />
                 <Route path="/admin/home" element={<AdminHome />} />
                 <Route path="/www" element={<WWW />} />

@@ -48,8 +48,8 @@ function WWW() {
 
         fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: idOfContentSelected
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ contentId: idOfContentSelected })
         }).then(response => response.text())
             .then(contentType => {
                 setTypeOfContentSelected(contentType);
@@ -67,8 +67,8 @@ function WWW() {
         if (typeOfContentSelected === "movie") {
             fetch(`${API_BASE_URL}/getmovieviewcount`, {
                 method: 'POST',
-                headers: {"Content-Type": "text/plain"},
-                body: idOfContentSelected
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ contentId: idOfContentSelected })
             }).then(response => response.text())
                 .then(numViews => {
                     setViewCount(parseInt(numViews));
@@ -79,8 +79,8 @@ function WWW() {
         else {
             fetch(`${API_BASE_URL}/getnumseasons`, {
                 method: 'POST',
-                headers: {"Content-Type": "text/plain"},
-                body: idOfContentSelected
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ contentId: idOfContentSelected })
             }).then(response => response.text())
                 .then(numOfSeasons => {
                     setNumSeasons(parseInt(numOfSeasons));
@@ -116,18 +116,20 @@ function WWW() {
 
     }, [idOfContentSelected, numSeasonSelected]);
 
-    useEffect(()=> { // gets episode view count once an episode is selected
+    useEffect(() => {
+        if (!episodeIdOfEpisodeSelected) return;
+
         fetch(`${API_BASE_URL}/getepisodeviewcount`, {
             method: 'POST',
-            headers: {"Content-Type": "text/plain"},
-            body: episodeIdOfEpisodeSelected
-        }).then(response => response.text())
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ episodeId: episodeIdOfEpisodeSelected })
+        })
+            .then(res => res.text())
             .then(numViews => {
                 setViewCount(parseInt(numViews));
             })
-            .catch(error => console.error("Error:", error));
-
-    },[episodeIdOfEpisodeSelected]);
+            .catch(err => console.error("Error:", err));
+    }, [episodeIdOfEpisodeSelected]);
 
     useEffect( () => { // gets names of viewers for a movie once idOfContentSelected, or gets names for an episode of a series once selected
         async function getViewers(id: string) {
