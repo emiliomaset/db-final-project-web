@@ -6,12 +6,10 @@ import Select from "react-select";
 function MemberHome(){
     const navigate = useNavigate();
 
-    //User data
     const [email] = useState(localStorage.getItem("email"));
     const [memberName, setMemberName] = useState(localStorage.getItem("memberName") || "");
     const [memberId, setMemberId] = useState<string | null>(localStorage.getItem("userId"));
 
-    //Page State
     const [sequels, setSequels] = useState([]);
     const [history, setHistory] = useState([]);
     const [movies, setMovies] = useState([]);
@@ -20,18 +18,15 @@ function MemberHome(){
     const [loading, setLoading] = useState(true);
 
 
-    //Redirects if login failed
     useEffect(() => {
         if (!email) {
             navigate("/");
         }
     }, [email, navigate]);
 
-    //Fetch member information and sequels
     useEffect(() => {
         async function fetchData() {
             try {
-                //Get all sequels
                 const sequelRes = await fetch(`${API_BASE_URL}/movies/sequels`);
                 const sequelData = await sequelRes.json();
                 setSequels(sequelData);
@@ -64,7 +59,6 @@ function MemberHome(){
         if (email) fetchData();
     }, [email]);
 
-    //Create and load all movies dropdown
     useEffect(() => {
         fetch(`${API_BASE_URL}/getallcontent`)
             .then((res) => res.json())
@@ -81,7 +75,6 @@ function MemberHome(){
             .catch((err) => console.error("Error fetching movies:", err));
     }, []);
 
-    //Update shown movie information and sequels
     useEffect(() => {
         if (!selectedMovie)
         {
@@ -89,7 +82,6 @@ function MemberHome(){
             return;
         }
 
-        // Build the movie info for display
         setMovieInfo({
             title: selectedMovie.label,
             genre: selectedMovie.genre,
@@ -97,11 +89,9 @@ function MemberHome(){
             imdb_link: selectedMovie.imdb_link,
         });
 
-        // Fetch sequel for the selected movie
         fetch(`${API_BASE_URL}/movies/sequels/${selectedMovie.value}`)
             .then(res => res.json())
             .then(data => {
-                // backend returns [{ sequel_movie: "Now You See Me 2" }, ...]
                 setMovieInfo(prev => ({
                     ...(prev || {}),
                     sequelList: data.map((r: any) => r.sequel_movie),
@@ -128,7 +118,7 @@ function MemberHome(){
 
         return (
             <div style={{ marginBottom: "25px" }}>
-                {/* Header */}
+
                 <div
                     onClick={() => setOpen(!open)}
                     style={{
@@ -147,7 +137,7 @@ function MemberHome(){
                     <span style={{ fontSize: "20px", color }}>{open ? "▼" : "►"}</span>
                 </div>
 
-                {/* Watch History Content */}
+
                 <div
                     style={{
                         maxHeight: open ? "500px" : "0px",
@@ -178,12 +168,12 @@ function MemberHome(){
 
                             return (
                                 <tr key={idx} style={{ borderBottom: "1px solid #222" }}>
-                                    {/* Title stays left aligned (looks neater) */}
+
                                     <td style={{ padding: "12px", fontWeight: "600", textAlign:"left" }}>
                                         {item.title}
                                     </td>
 
-                                    {/* Episode only for Series */}
+
                                     {title.includes("Series") && (
                                         <td style={{ padding: "12px", textAlign: "center" }}>
                                             {item.episode_title || "—"}
@@ -218,7 +208,7 @@ function MemberHome(){
                 minHeight: "100vh",
                 fontFamily: "Inter, sans-serif",
             }}>
-            {/* Search Button */}
+
             <div
                 style={{
                     display: "flex",
@@ -266,7 +256,7 @@ function MemberHome(){
                 </button>
             </div>
 
-            {/* Header */}
+
             <h2
                 style={{
                     textAlign: "center",
@@ -277,7 +267,7 @@ function MemberHome(){
                 }}
             >👋Welcome back, {memberName || email}
             </h2>
-            {/* Quick actions */}
+
             <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "20px" }}>
                 <button
                     onClick={() => navigate("/member/profile")}
@@ -296,7 +286,7 @@ function MemberHome(){
                 </button>
             </div>
 
-            {/* Movie Information Card */}
+
             {movieInfo && (
                 <div
                     style={{
@@ -341,7 +331,7 @@ function MemberHome(){
                 </div>
             )}
 
-            {/* Sequel Area */}
+
             {movieInfo?.sequelList && (
                 <div style={{ marginTop: "25px", textAlign: "center" }}>
                     <h3 style={{ color: "#ffffff" }}>🎬 Sequel (s)</h3>
@@ -370,7 +360,7 @@ function MemberHome(){
                 </div>
             )}
 
-            {/* Watch History Section */}
+
             <div
                 style={{
                     display: "flex",

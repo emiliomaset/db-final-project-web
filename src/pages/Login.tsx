@@ -15,7 +15,6 @@ function Login() {
         try {
             e.preventDefault();
 
-            // ⭐ FIXED URL — removed extra /api
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

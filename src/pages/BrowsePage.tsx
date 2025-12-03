@@ -5,12 +5,10 @@ import { API_BASE_URL } from "../config.ts";
 
 function BrowsePage(){
 
-  //User data
   const [email] = useState(localStorage.getItem("email"));
   const [memberName, setMemberName] = useState(localStorage.getItem("memberName") || "");
   const [memberId, setMemberId] = useState<string | null>(localStorage.getItem("userId"));
 
-  //Page States
   const [content, setContent] = useState([]);
   const [contentInfo, setContentInfo] = useState<any>({});
   const [posters, setPosters] = useState({});
@@ -29,7 +27,6 @@ function BrowsePage(){
     async function showContentPoster(title: string, type: string) {
         const apiKey = "b852861278c3dd4b02948d2ceef07609";
 
-        // Decide endpoint based on type
         const endpoint =
             type === "series"
                 ? "https://api.themoviedb.org/3/search/tv"
@@ -44,7 +41,6 @@ function BrowsePage(){
 
         const lowerTitle = title.toLowerCase();
 
-        // Try to find an EXACT title match first
         const exact =
             data.results.find(
                 (r: any) =>
@@ -101,7 +97,7 @@ function BrowsePage(){
         const res = await fetch(`${API_BASE_URL}/getmovieorseries`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contentId })   // <-- FIXED
+            body: JSON.stringify({ contentId })
         });
         return res.text();
     }

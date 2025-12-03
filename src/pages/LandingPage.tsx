@@ -7,8 +7,8 @@ function LandingPage(){
         <h2>Movie Streaming!</h2>
         <Login/>
         </div>
-    ) // end of return
+    )
 
-} // end of LandingPage
+}
 
 export default LandingPage

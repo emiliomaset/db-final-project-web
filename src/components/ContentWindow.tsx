@@ -170,7 +170,7 @@ function ContentDetails() {
             >
                 ◀ Back
             </button>
-            {/*Content Poster*/}
+
             {poster && (
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
                     <img
@@ -184,7 +184,7 @@ function ContentDetails() {
                     />
                 </div>
             )}
-            {/*Title*/}
+
             <h1>{content.title}</h1>
 
             <p>
@@ -199,7 +199,7 @@ function ContentDetails() {
                 })}
             </p>
 
-            {/*Movie Stream Card*/}
+
             <div
                 style={{
                     display: "flex",
