@@ -4,6 +4,7 @@ import "./AdminHome.css"
 import WWW from "../components/WWW.tsx";
 import AdminAnalytics from "../components/AdminAnalytics.tsx";
 import EditMembers from "../components/EditMembers.tsx";
+import EditContent from "../components/EditContent.tsx";
 
 function AdminHome() {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ function AdminHome() {
     const [hasClickedWhosWatchedWhat, setHasClickedWhosWatchedWhat] = useState(false)
     const [hasClickedAnalytics, setHasClickedAnalytics] = useState(false)
     const [hasClickedEditMembers, setHasClickedEditMembers] = useState(false)
+    const [hasClickedEditContent, setHasClickedEditContent] = useState(false)
 
     return(
         <>
@@ -22,22 +24,33 @@ function AdminHome() {
                     setHasClickedAnOption(true)
                     setHasClickedWhosWatchedWhat(true)
                     setHasClickedAnalytics(false)
-                    setHasClickedEditMembers(false)}
+                    setHasClickedEditMembers(false)
+                    setHasClickedEditContent(false)}
                 }> Who's Watched What?</button>
 
                 <button className="btn blue-btn" onClick={() => {
                     setHasClickedAnOption(true)
                     setHasClickedAnalytics(true)
                     setHasClickedWhosWatchedWhat(false)
-                    setHasClickedEditMembers(false)}
+                    setHasClickedEditMembers(false)
+                    setHasClickedEditContent(false)}
                 }>Analytics</button>
 
                 <button className="btn blue-btn" onClick={() => {
                     setHasClickedAnOption(true)
                     setHasClickedEditMembers(true)
                     setHasClickedAnalytics(false)
-                    setHasClickedWhosWatchedWhat(false)}
+                    setHasClickedWhosWatchedWhat(false)
+                    setHasClickedEditContent(false)}
                 }>Edit Members</button>
+
+                <button className="btn blue-btn" onClick={() => {
+                    setHasClickedAnOption(true)
+                    setHasClickedEditContent(true)
+                    setHasClickedEditMembers(false)
+                    setHasClickedAnalytics(false)
+                    setHasClickedWhosWatchedWhat(false)}
+                }>Edit Content</button>
 
                 <button className="btn blue-btn" onClick={() => navigate("/")}>
                     Logout
@@ -60,6 +73,8 @@ function AdminHome() {
                 {hasClickedAnalytics && <AdminAnalytics/>}
 
                 {hasClickedEditMembers && <EditMembers/>}
+
+                {hasClickedEditContent && <EditContent/>}
 
             </div>
 
