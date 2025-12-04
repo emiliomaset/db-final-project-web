@@ -64,7 +64,11 @@ const AddMemberModal = ({members, setIsModalOpen} :
 
     return(
         <div className="modal-container">
-            <form onSubmit={handleSubmit} className="model-content">
+            <div className="model-content">
+                <button className="btn blue-btn" style={{marginLeft: "65vw", marginTop: "-20vh"}} onClick={() => setIsModalOpen(false)}>Close</button>
+            <form onSubmit={handleSubmit} >
+
+
                 <div className="form-row">
                     <div className="form-group">
                         <label>Email</label>
@@ -191,6 +195,7 @@ const AddMemberModal = ({members, setIsModalOpen} :
 
                 <button className="blue-btn btn" type="submit">Submit</button>
             </form>
+            </div>
         </div>
 
 

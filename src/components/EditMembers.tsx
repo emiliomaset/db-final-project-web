@@ -49,6 +49,10 @@ const EditMembers = () => {
 
     return(
         <div className="admin-home-content">
+
+            <h2>All Members</h2>
+            {!isLoadingMembers && members.length == 0 && (<h3>No members found!</h3>)}
+
             {!isLoadingMembers && members.length > 0 && (
                 <>
                     <table

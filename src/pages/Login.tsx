@@ -52,8 +52,10 @@ function Login() {
     return (
         <>
             <form className="login-container">
+
                 <div className="form-group">
                     <input
+                        style={{width: "30vw"}}
                         type="text"
                         name="email"
                         value={loginData.email}
@@ -65,6 +67,7 @@ function Login() {
 
                 <div className="form-group">
                     <input
+                        style={{width: "30vw"}}
                         type="password"
                         name="password"
                         value={loginData.password}

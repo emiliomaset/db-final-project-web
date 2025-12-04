@@ -172,11 +172,11 @@ function WWW() {
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    <p>Total View Count: {viewCount}</p>
+                    <p>Viewers:</p>
 
                     {viewCount > 0 && (<table
                         cellPadding="8"
-                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center"}}
+                        style={{borderCollapse: "collapse", width: "100%", textAlign: "center", border: '1px solid gray'}}
                     >
                         <thead style={{ background: "#f0f0f0" }}>
                         <tr>
@@ -195,6 +195,8 @@ function WWW() {
                         ))}
                         </tbody>
                     </table>)}
+
+                    <p>Total View Count: {viewCount}</p>
 
                 </>
             )}
