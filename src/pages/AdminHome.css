@@ -5,6 +5,7 @@
     height: fit-content;
     padding: 1rem;
     justify-content: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .admin-home-container {
@@ -12,7 +13,9 @@
 }
 
 .admin-home-content {
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
     background-color: #f5f7f6;
     border-radius: 8px;
     font-size: 1.2rem;
@@ -25,6 +28,7 @@
     align-items: center;
     text-align: center;
     padding: 2rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .modal-container {
@@ -41,7 +45,6 @@
 }
 
 .model-content {
-
     background-color: white;
     padding: 2.5em;
     border-radius: 8px;

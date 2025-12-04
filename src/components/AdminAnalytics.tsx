@@ -19,7 +19,7 @@ function AdminAnalytics() {
   }, []);
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div className="admin-home-content">
       <h2>📊 Streaming Analytics Dashboard</h2>
 
 

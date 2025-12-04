@@ -94,15 +94,38 @@ function MemberProfile() {
 
     setLoading(true);
 
+    let targetUserId = userId;
+    if (!targetUserId && email) {
+      try {
+        const r0 = await fetch(`${API_BASE_URL}/movies/member-info/${email}`);
+        if (r0.ok) {
+          const d0 = await r0.json();
+          if (d0?.user_id) {
+            targetUserId = String(d0.user_id);
+            setUserId(targetUserId);
+            localStorage.setItem("userId", targetUserId);
+          }
+        }
+      } catch {}
+    }
+
+    if (!targetUserId) {
+      setError("Unable to determine user ID. Please try logging in again.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const r = await fetch(`${API_BASE_URL}/members/${userId}`, {
+      const r = await fetch(`${API_BASE_URL}/users/${targetUserId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updated)
       });
 
       if (!r.ok) {
-        setError("Failed to update profile.");
+        let details = "";
+        try { details = await r.text(); } catch {}
+        setError(`Failed to update profile ${r.status ? `(${r.status})` : ""} ${details ? details : ""}`);
         setLoading(false);
         return;
       }
@@ -113,8 +136,8 @@ function MemberProfile() {
 
       setTimeout(() => navigate("/member/home"), 800);
 
-    } catch {
-      setError("Failed to update profile.");
+    } catch (e: any) {
+      setError(`Failed to update profile. ${e?.message || ""}`);
       setLoading(false);
     }
   }
@@ -128,40 +151,41 @@ function MemberProfile() {
     <div style={{ padding: "30px", color: "white", backgroundColor: "cadetblue", minHeight: "100vh" }}>
       <h2 style={{ textAlign: "center" }}>Edit Profile</h2>
 
-      <form onSubmit={save} style={{ maxWidth: 520, margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
+      <form onSubmit={save} style={{ maxWidth: "40vw", margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
+
         <div style={{ marginBottom: 12 }}>
           <label>Email (read-only)</label>
-          <input type="email" value={email} readOnly style={{ width: "100%", padding: 10 }} />
+          <input type="email" value={email} readOnly style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Name *</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={name} onChange={(e) => setName(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Street</label>
-          <input value={streetName} onChange={(e) => setStreetName(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={streetName} onChange={(e) => setStreetName(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>City</label>
-          <input value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>State</label>
-          <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>ZIP</label>
-          <input value={zip} onChange={(e) => setZip(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={zip} onChange={(e) => setZip(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Phone</label>
-          <input value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -172,7 +196,7 @@ function MemberProfile() {
 
           <div style={{ flex: 1 }}>
             <label>Confirm Password</label>
-            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", padding: 10 }} />
+            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "90%", padding: 10 }} />
           </div>
         </div>
 
@@ -183,6 +207,7 @@ function MemberProfile() {
           <button type="button" onClick={() => navigate(-1)} style={{ flex: 1, padding: 10 }}>Cancel</button>
           <button type="submit" disabled={loading} style={{ flex: 2, padding: 10 }}>{loading ? "Saving..." : "Save"}</button>
         </div>
+
       </form>
     </div>
   );

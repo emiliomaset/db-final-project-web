@@ -4,6 +4,6 @@ function AppLayout( {children}) {
             {children}
         </div>
     )
-} // end of AppLayout
+}
 
 export default AppLayout

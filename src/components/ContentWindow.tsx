@@ -152,7 +152,7 @@ function ContentDetails() {
             style={{
                 minHeight: "100vh",
                 color: "white",
-                backgroundColor: "#1c1c1c",
+                backgroundColor: "#5F9EA0FF",
                 padding: "2rem",
             }}
         >
@@ -170,7 +170,7 @@ function ContentDetails() {
             >
                 ◀ Back
             </button>
-            {/*Content Poster*/}
+
             {poster && (
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
                     <img
@@ -184,7 +184,7 @@ function ContentDetails() {
                     />
                 </div>
             )}
-            {/*Title*/}
+
             <h1>{content.title}</h1>
 
             <p>
@@ -199,7 +199,7 @@ function ContentDetails() {
                 })}
             </p>
 
-            {/*Movie Stream Card*/}
+
             <div
                 style={{
                     display: "flex",
@@ -214,7 +214,7 @@ function ContentDetails() {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                        color: "#019185",
+                        color: "white",
                         fontSize: "1.1rem",
                         textDecoration: "underline",
                         cursor: "pointer",

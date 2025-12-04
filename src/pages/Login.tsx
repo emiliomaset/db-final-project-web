@@ -15,7 +15,6 @@ function Login() {
         try {
             e.preventDefault();
 
-            // ⭐ FIXED URL — removed extra /api
             const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -53,8 +52,10 @@ function Login() {
     return (
         <>
             <form className="login-container">
+
                 <div className="form-group">
                     <input
+                        style={{width: "30vw"}}
                         type="text"
                         name="email"
                         value={loginData.email}
@@ -66,6 +67,7 @@ function Login() {
 
                 <div className="form-group">
                     <input
+                        style={{width: "30vw"}}
                         type="password"
                         name="password"
                         value={loginData.password}

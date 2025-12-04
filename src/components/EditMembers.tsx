@@ -25,7 +25,7 @@ const EditMembers = () => {
             const result: Member[] = await response.json();
             setMembers(result);
             setIsLoadingMembers(false)
-        } // end of fetchMembers
+        }
 
         fetchMembers();
 
@@ -39,16 +39,20 @@ const EditMembers = () => {
             throw new Error(`Error ${response.status} in removing member!`)
         }
 
-        setMembers(prevMembers => [ // remove member from members array. will cause page re-render, thereby removing row from table too.
+        setMembers(prevMembers => [
             ...prevMembers.slice(0, index),
             ...prevMembers.slice(index + 1),
         ]);
 
         alert(`${memberToRemove.name} has been removed!`)
-    } // end of removeMember
+    }
 
     return(
         <div className="admin-home-content">
+
+            <h2>All Members</h2>
+            {members.length == 0 && (<h3>No members found!</h3>)}
+
             {!isLoadingMembers && members.length > 0 && (
                 <>
                     <table
@@ -67,7 +71,7 @@ const EditMembers = () => {
 
                         <tbody>
 
-                        {/*{console.log("AT FETCH", members)}*/}
+
 
                         {members.map((member, i) => (
 
@@ -95,8 +99,8 @@ const EditMembers = () => {
             {isModalOpen && (<AddMemberModal members={members} setIsModalOpen={setIsModalOpen}/>)}
         </div>
 
-    ) // end of return
+    ) //
 
-} // end of EditMembers
+} //
 
 export default EditMembers;
