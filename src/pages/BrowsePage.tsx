@@ -142,7 +142,7 @@ function BrowsePage(){
       style={{
         display: "flex",
         color: "white",
-        backgroundColor: "#0d0d0d",
+        backgroundColor: "#5F9EA0FF",
         minHeight: "100vh",
         fontFamily: "Inter, sans-serif",
         flexDirection: "column",
@@ -157,7 +157,7 @@ function BrowsePage(){
           justifyContent: "center",
           gap: "1rem",
           padding: "1rem",
-            backgroundColor: "#111111",
+            backgroundColor: "#f5f7f6",
             borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
@@ -165,7 +165,7 @@ function BrowsePage(){
         <button
           onClick={() => navigate("/member/home")}
           style={{
-            backgroundColor: "rgb(186,2,2)",
+            backgroundColor: "#2e6981",
             color: "white",
             border: "none",
             padding: "0.5rem 1rem",
@@ -203,7 +203,7 @@ function BrowsePage(){
           />
 
           {/* Checkboxes */}
-          <label>
+          <label style={{color: "black"}}>
             <input
               type="checkbox"
               checked={awardWinning}
@@ -213,7 +213,7 @@ function BrowsePage(){
             Award-Winning Only
           </label>
 
-          <label>
+          <label style={{color: "black"}}>
             <input
               type="checkbox"
               checked={notWatched}
@@ -228,7 +228,7 @@ function BrowsePage(){
             onClick={handleSearch}
             type="submit"
             style={{
-              backgroundColor: "rgb(186,2,2)",
+              backgroundColor: "#2e6981",
               color: "white",
               border: "none",
               padding: "0.5rem 1rem",
@@ -250,7 +250,7 @@ function BrowsePage(){
           justifyContent: "center",
           alignItems: "flex-start",
             paddingTop: "50px",
-          backgroundColor: "#1c1c1c",
+          backgroundColor: "#5F9EA0FF",
         }}
       >
         {/* Display Search Results */}

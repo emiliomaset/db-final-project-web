@@ -151,41 +151,41 @@ function MemberProfile() {
     <div style={{ padding: "30px", color: "white", backgroundColor: "cadetblue", minHeight: "100vh" }}>
       <h2 style={{ textAlign: "center" }}>Edit Profile</h2>
 
-      <form onSubmit={save} style={{ maxWidth: 520, margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
+      <form onSubmit={save} style={{ maxWidth: "40vw", margin: "20px auto", background: "#141414", padding: 20, borderRadius: 12 }}>
 
         <div style={{ marginBottom: 12 }}>
           <label>Email (read-only)</label>
-          <input type="email" value={email} readOnly style={{ width: "100%", padding: 10 }} />
+          <input type="email" value={email} readOnly style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Name *</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={name} onChange={(e) => setName(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Street</label>
-          <input value={streetName} onChange={(e) => setStreetName(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={streetName} onChange={(e) => setStreetName(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>City</label>
-          <input value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={city} onChange={(e) => setCity(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>State</label>
-          <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={stateVal} onChange={(e) => setStateVal(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>ZIP</label>
-          <input value={zip} onChange={(e) => setZip(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={zip} onChange={(e) => setZip(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label>Phone</label>
-          <input value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ width: "100%", padding: 10 }} />
+          <input value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ width: "95%", padding: 10 }} />
         </div>
 
         <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -196,7 +196,7 @@ function MemberProfile() {
 
           <div style={{ flex: 1 }}>
             <label>Confirm Password</label>
-            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", padding: 10 }} />
+            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "90%", padding: 10 }} />
           </div>
         </div>
 

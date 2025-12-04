@@ -202,9 +202,8 @@ function MemberHome(){
     return(
         <div
             style={{
-                padding: "30px",
                 color: "white",
-                backgroundColor: "#1c1c1c",
+                backgroundColor: "#5F9EA0FF",
                 minHeight: "100vh",
                 fontFamily: "Inter, sans-serif",
             }}>
@@ -214,8 +213,10 @@ function MemberHome(){
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: "5vh",
-                    gap: "5rem"
+                    height: "fit-content",
+                    padding: "1rem",
+                    gap: "5rem",
+                    backgroundColor: "#f5f7f6"
                 }}
             >
                 <button
@@ -223,8 +224,8 @@ function MemberHome(){
                     style={{
                         textAlign: "center",
                         borderRadius: "12px",
-                        backgroundColor: "black",
-                        fontSize: "1rem",
+                        backgroundColor: "#2e6981",
+                        fontSize: "1.1rem",
                         minWidth: "min-content",
                         width: "15vw",
                         color: "white",
@@ -241,8 +242,8 @@ function MemberHome(){
                     style={{
                         textAlign: "center",
                         borderRadius: "12px",
-                        backgroundColor: "black",
-                        fontSize: "1rem",
+                        backgroundColor: "#2e6981",
+                        fontSize: "1.1rem",
                         minWidth: "min-content",
                         width: "15vw",
                         color: "white",
@@ -265,7 +266,7 @@ function MemberHome(){
                     color: "white",
                     letterSpacing: "0.25px",
                 }}
-            >👋Welcome back, {memberName || email}
+            >Welcome Back, {memberName || email}!
             </h2>
 
             <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "20px" }}>
@@ -274,12 +275,13 @@ function MemberHome(){
                     style={{
                         textAlign: "center",
                         borderRadius: "12px",
-                        backgroundColor: "#1a1a1a",
-                        fontSize: "0.95rem",
+                        backgroundColor: "#2e6981",
+                        fontSize: "1.1rem",
                         color: "white",
                         border: "none",
                         padding: "0.5rem 1rem",
                         cursor: "pointer",
+                        marginTop: "2rem"
                     }}
                 >
                     Edit Profile
@@ -389,7 +391,7 @@ function MemberHome(){
                             fontWeight: "500",
                         }}
                     >
-                        📺 Your Watch History
+                         Your Watch History 📺
                     </h3>
 
                     {history && history.length > 0 ? (

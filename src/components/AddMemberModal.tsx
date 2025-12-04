@@ -37,10 +37,6 @@ const AddMemberModal = ({members, setIsModalOpen} :
         setNewMemberData({...newMemberData, [e.target.name] : e.target.value})
     }
 
-    // const translateNewMemberDataToDto = () => {
-    //
-    // } // end of translateNewMemberDataToDto
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log("Sending new member data:", newMemberData)
@@ -65,7 +61,7 @@ const AddMemberModal = ({members, setIsModalOpen} :
     return(
         <div className="modal-container">
             <div className="model-content">
-                <button className="btn blue-btn" style={{marginLeft: "65vw", marginTop: "-20vh"}} onClick={() => setIsModalOpen(false)}>Close</button>
+                <button className="btn blue-btn" style={{marginLeft: "50vw", marginTop: "-20vh"}} onClick={() => setIsModalOpen(false)}>Close</button>
             <form onSubmit={handleSubmit} >
 
 

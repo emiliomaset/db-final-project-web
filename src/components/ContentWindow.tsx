@@ -152,7 +152,7 @@ function ContentDetails() {
             style={{
                 minHeight: "100vh",
                 color: "white",
-                backgroundColor: "#1c1c1c",
+                backgroundColor: "#5F9EA0FF",
                 padding: "2rem",
             }}
         >
@@ -214,7 +214,7 @@ function ContentDetails() {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                        color: "#019185",
+                        color: "white",
                         fontSize: "1.1rem",
                         textDecoration: "underline",
                         cursor: "pointer",

@@ -161,7 +161,7 @@ function WWW() {
 
     return (
         <div className="admin-home-content">
-            <div className="form-group">
+            <div className="form-group" style={{width: "35vw"}}>
                 <label>Title of Content</label>
                 <Select
                     options={contentOptions}
@@ -172,9 +172,12 @@ function WWW() {
 
             {typeOfContentSelected === "movie" && (
                 <>
-                    <p>Viewers:</p>
 
-                    {viewCount > 0 && (<table
+
+                    {viewCount > 0 && (
+                        <>
+                        <p>Viewers:</p>
+                        <table
                         cellPadding="8"
                         style={{borderCollapse: "collapse", width: "100%", textAlign: "center", border: '1px solid gray'}}
                     >
@@ -194,7 +197,9 @@ function WWW() {
                             </tr>
                         ))}
                         </tbody>
-                    </table>)}
+                    </table>
+                        </>
+                    )}
 
                     <p>Total View Count: {viewCount}</p>
 
@@ -203,7 +208,7 @@ function WWW() {
 
             {typeOfContentSelected === "series" && (
                 <>
-                    <div className="form-group">
+                    <div className="form-group" style={{width: "35vw"}}>
                         <label>Select Season Number</label>
                         <Select
                             options={getSeasonsAsOptions(numSeasons)}
@@ -214,7 +219,7 @@ function WWW() {
 
                     {numSeasonSelected !== 0 && (
                         <>
-                            <div className="form-group">
+                            <div className="form-group" style={{width: "35vw"}}>
                                 <label>Select Episode Title</label>
                                 <Select
                                     options={listOfEpisodes}
